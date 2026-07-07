@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Run Home Assistant with this repo's custom_components/ on the path, using
+# ./config as the config dir. Equivalent to what the "Run Home Assistant"
+# VS Code task (.vscode/tasks.json) invokes.
+set -e
+
+cd "$(dirname "$0")/.."
+
+mkdir -p config
+if [ ! -f config/configuration.yaml ]; then
+    echo "config/configuration.yaml not found — did you mean to run scripts/setup first?"
+    exit 1
+fi
+
+export PYTHONPATH="$(pwd):${PYTHONPATH}"
+hass -c config --debug

@@ -1,0 +1,66 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to WeatherDataLogger",
+        "description": "Enter the connection details for the weatherdatalogger MariaDB database. A read-only DB user is recommended — see sql/create_readonly_user.sql in the weatherdatalogger-ha repo.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "database": "Database name",
+          "username": "Username",
+          "password": "Password",
+          "location": "Forecast location",
+          "location_description": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\""
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect — check host/port and that combined_realtime exists in the target database.",
+      "invalid_auth": "Invalid username or password.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This database/location is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "air_temperature": { "name": "Temperature" },
+      "relative_humidity": { "name": "Humidity" },
+      "dew_point": { "name": "Dew point" },
+      "feels_like": { "name": "Feels like" },
+      "heat_index": { "name": "Heat index" },
+      "wind_chill": { "name": "Wind chill" },
+      "wet_bulb": { "name": "Wet bulb" },
+      "indoor_temperature": { "name": "Indoor temperature" },
+      "indoor_humidity": { "name": "Indoor humidity" },
+      "station_pressure": { "name": "Station pressure" },
+      "sea_level_pressure": { "name": "Sea level pressure" },
+      "pressure_trend": { "name": "Pressure trend" },
+      "wind_speed": { "name": "Wind speed" },
+      "wind_gust": { "name": "Wind gust" },
+      "wind_lull": { "name": "Wind lull" },
+      "wind_direction": { "name": "Wind direction" },
+      "wind_beaufort": { "name": "Wind (Beaufort)" },
+      "illuminance": { "name": "Illuminance" },
+      "uv_index": { "name": "UV index" },
+      "solar_radiation": { "name": "Solar radiation" },
+      "rain_accumulation_today": { "name": "Rain today" },
+      "rain_rate": { "name": "Rain rate" },
+      "lightning_count": { "name": "Lightning strikes (3h)" },
+      "lightning_distance": { "name": "Lightning distance" },
+      "lightning_last_detected": { "name": "Lightning last detected" },
+      "pm_2p5": { "name": "PM2.5" },
+      "pm_10": { "name": "PM10" },
+      "aqi_pm2p5": { "name": "AQI (PM2.5)" },
+      "aqi_pm10": { "name": "AQI (PM10)" },
+      "caqi_pm2p5": { "name": "CAQI (PM2.5)" },
+      "caqi_pm10": { "name": "CAQI (PM10)" },
+      "battery_voltage": { "name": "Battery voltage" },
+      "wind_gust_high_today": { "name": "Wind gust high today" },
+      "wind_bearing_avg_day": { "name": "Wind bearing average today" },
+      "rain_total_yesterday": { "name": "Rain total yesterday" }
+    }
+  }
+}

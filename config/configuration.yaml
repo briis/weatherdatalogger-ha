@@ -1,0 +1,17 @@
+# Minimal Home Assistant config for local dev/testing of custom_components/weatherdatalogger.
+# Run via the "Run Home Assistant" VS Code task (scripts/develop), then open
+# http://localhost:8123 and add the integration via Settings -> Devices & Services.
+
+default_config:
+
+logger:
+  default: info
+  logs:
+    custom_components.weatherdatalogger: debug
+
+# Add the integration here to skip the UI config flow during quick iteration,
+# or leave this out and use Settings -> Devices & Services -> Add Integration
+# instead (recommended — exercises the real config_flow.py).
+# weatherdatalogger:
+#   host: 127.0.0.1
+#   port: 3306

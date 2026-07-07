@@ -1,0 +1,22 @@
+version: 2
+updates:
+  # Bumps homeassistant== and pytest-homeassistant-custom-component== in
+  # requirements_test.txt whenever a new HA release ships on PyPI. Grouped
+  # into one PR since the two must move together (see the comment in
+  # requirements_test.txt) — pytest-homeassistant-custom-component pins an
+  # exact matching homeassistant== version, so an ungrouped update landing
+  # only one of them would desync the pair.
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      home-assistant:
+        patterns:
+          - "homeassistant"
+          - "pytest-homeassistant-custom-component"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

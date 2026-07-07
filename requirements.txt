@@ -1,0 +1,4 @@
+# Runtime dependency of custom_components/weatherdatalogger not already
+# shipped by Home Assistant core — kept identical to the writer side's pin
+# in weatherdatalogger/database/requirements.txt upstream.
+PyMySQL==1.1.1

@@ -1,0 +1,54 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"name": "weatherdatalogger-ha",
+	"image": "mcr.microsoft.com/devcontainers/base:debian",
+	"containerEnv": {
+		"TZ": "Europe/Copenhagen",
+		"PYTHONASYNCIODEBUG": "1"
+	},
+	"postCreateCommand": "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements_test.txt -r requirements.txt",
+	"forwardPorts": [8123],
+	"portsAttributes": {
+		"8123": {
+			"label": "Home Assistant",
+			"onAutoForward": "notify"
+		}
+	},
+	"runArgs": [
+		"-e",
+		"GIT_EDTIOR='code --wait'"
+	],
+	"mounts": [
+		"source=${localEnv:HOME}/.claude.json,target=/home/vscode/.claude.json,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"anthropic.claude-code",
+				"charliermarsh.ruff",
+				"github.vscode-pull-request-github",
+				"ms-python.python",
+				"ms-python.vscode-pylance"
+			],
+			"settings": {
+				"files.eol": "\n",
+				"editor.tabSize": 4,
+				"editor.formatOnSave": true,
+				"files.trimTrailingWhitespace": true,
+				"python.analysis.typeCheckingMode": "basic",
+				"python.analysis.autoImportCompletions": true,
+				"python.defaultInterpreterPath": "/usr/local/bin/python3",
+				"[python]": {
+					"editor.defaultFormatter": "charliermarsh.ruff"
+				}
+			}
+		}
+	},
+	"remoteUser": "vscode",
+	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.14"
+		}
+	}
+}
