@@ -38,7 +38,9 @@
       "Bash(echo \"exit: $?\")",
       "Bash(python3 -c \"import graphify; print\\('OK'\\)\")",
       "Bash(graphify export *)",
-      "Bash(git -C /workspaces/weatherdatalogger-ha status)"
+      "Bash(git -C /workspaces/weatherdatalogger-ha status)",
+      "Bash(git check-ignore *)",
+      "Bash(git rm *)"
     ]
   }
 }
