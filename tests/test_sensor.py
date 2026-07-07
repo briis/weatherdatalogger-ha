@@ -31,9 +31,7 @@ def test_value_fn_reads_matching_row_key() -> None:
 
 
 def test_stats_sources_are_flagged() -> None:
-    stats_keys = {
-        d.key for d in SENSOR_DESCRIPTIONS if d.source == "stats"
-    }
+    stats_keys = {d.key for d in SENSOR_DESCRIPTIONS if d.source == "stats"}
     assert stats_keys == {
         "wind_gust_high_today",
         "wind_bearing_avg_day",

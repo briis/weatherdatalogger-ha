@@ -22,9 +22,7 @@ PLATFORMS = ["weather", "sensor"]
 type WeatherDataLoggerConfigEntry = ConfigEntry[WeatherDataLoggerCoordinator]
 
 
-async def async_setup_entry(
-    hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry
-) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry) -> bool:
     """Set up WeatherDataLogger from a config entry."""
     client = WeatherDataLoggerClient(
         WeatherDataLoggerConfig(
@@ -53,9 +51,7 @@ async def async_setup_entry(
     return True
 
 
-async def async_unload_entry(
-    hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry
-) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 

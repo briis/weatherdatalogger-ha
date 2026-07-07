@@ -52,7 +52,7 @@ class WeatherDataLoggerClient:
         with self._connect() as conn, conn.cursor() as cur:
             cur.execute("SELECT 1 FROM combined_realtime LIMIT 1")
 
-    def fetch_all(self) -> "WeatherDataLoggerSnapshot":
+    def fetch_all(self) -> WeatherDataLoggerSnapshot:
         """Fetch everything the two platforms need in one connection."""
         with self._connect() as conn, conn.cursor() as cur:
             cur.execute("SELECT * FROM combined_realtime LIMIT 1")

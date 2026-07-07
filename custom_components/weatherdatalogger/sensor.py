@@ -24,6 +24,7 @@ from homeassistant.const import (
     LIGHT_LUX,
     PERCENTAGE,
     EntityCategory,
+    UnitOfElectricPotential,
     UnitOfIrradiance,
     UnitOfLength,
     UnitOfPrecipitationDepth,
@@ -31,7 +32,6 @@ from homeassistant.const import (
     UnitOfSpeed,
     UnitOfTemperature,
     UnitOfVolumetricFlux,
-    UnitOfElectricPotential,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
@@ -369,9 +369,7 @@ async def async_setup_entry(
     )
 
 
-class WeatherDataLoggerSensor(
-    CoordinatorEntity[WeatherDataLoggerCoordinator], SensorEntity
-):
+class WeatherDataLoggerSensor(CoordinatorEntity[WeatherDataLoggerCoordinator], SensorEntity):
     """A single reading from combined_realtime or combined_realtime_stats."""
 
     entity_description: WeatherDataLoggerSensorDescription
@@ -396,7 +394,9 @@ class WeatherDataLoggerSensor(
     @property
     def _row(self) -> dict[str, Any] | None:
         data = self.coordinator.data
-        return data.realtime if self.entity_description.source == "realtime" else data.realtime_stats
+        return (
+            data.realtime if self.entity_description.source == "realtime" else data.realtime_stats
+        )
 
     @property
     def native_value(self) -> Any:

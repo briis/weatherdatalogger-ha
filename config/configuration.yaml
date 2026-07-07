@@ -2,7 +2,31 @@
 # Run via the "Run Home Assistant" VS Code task (scripts/develop), then open
 # http://localhost:8123 and add the integration via Settings -> Devices & Services.
 
-default_config:
+frontend:
+config:
+history:
+logbook:
+sun:
+automation:
+script:
+scene:
+input_boolean:
+input_number:
+input_select:
+input_text:
+input_button:
+input_datetime:
+timer:
+counter:
+person:
+zone:
+tag:
+webhook:
+my:
+media_source:
+schedule:
+energy:
+mobile_app:
 
 logger:
   default: info
