@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:hacs.xyz)",
+      "Bash(curl -s \"https://api.github.com/repos/hacs/action\")",
+      "Bash(curl -s \"https://api.github.com/search/code?q=%22invalid+hacs.json%22\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/action/main/action.yaml\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/action/main/Dockerfile\")",
+      "Bash(curl -s \"https://api.github.com/repos/hacs/action/contents/\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/action/main/action.yml\")",
+      "Bash(curl -s \"https://api.github.com/repos/hacs/action/git/trees/main?recursive=1\")",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s \"https://api.github.com/repos/hacs/integration/git/trees/main?recursive=1\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/integration/main/custom_components/hacs/validate/hacsjson.py\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/integration/main/custom_components/hacs/validate/integration_manifest.py\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/hacs/integration/main/custom_components/hacs/repositories/base.py\")",
+      "Bash(curl -s \"https://api.github.com/search/code?q=GITHUB_REF+repo:hacs/integration\" -H \"Accept: application/vnd.github+json\")",
+      "Bash(rm -rf hacs-integration)",
+      "Bash(curl -sL \"https://github.com/hacs/integration/archive/refs/heads/main.tar.gz\" -o hacs.tar.gz)",
+      "Bash(tar xzf *)",
+      "Bash(mv integration-main *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://raw.githubusercontent.com/briis/weatherdatalogger-ha/refs/heads/main/hacs.json\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" \"https://raw.githubusercontent.com/briis/weatherdatalogger-ha/main/hacs.json\")",
+      "Bash(curl -s \"https://raw.githubusercontent.com/briis/weatherdatalogger-ha/refs/heads/main/hacs.json\")",
+      "Bash(curl -s -o /dev/null -w \"html page status: %{http_code}\\\\n\" \"https://github.com/briis/weatherdatalogger-ha\")",
+      "Bash(curl -s -o /dev/null -w \"api status: %{http_code}\\\\n\" \"https://api.github.com/repos/briis/weatherdatalogger-ha\")",
+      "Skill(fewer-permission-prompts)",
+      "Skill(fewer-permission-prompts:*)",
+      "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
+      "Bash(python3 -c \"from PIL import Image; im = Image.open\\('/workspaces/weatherdatalogger-ha/custom_components/weatherdatalogger/brand/icon.png'\\); print\\(im.size, im.mode\\)\")"
+    ]
+  }
+}
