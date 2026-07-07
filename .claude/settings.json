@@ -27,7 +27,10 @@
       "Skill(fewer-permission-prompts)",
       "Skill(fewer-permission-prompts:*)",
       "Bash(python3 -c \"import PIL; print\\(PIL.__version__\\)\")",
-      "Bash(python3 -c \"from PIL import Image; im = Image.open\\('/workspaces/weatherdatalogger-ha/custom_components/weatherdatalogger/brand/icon.png'\\); print\\(im.size, im.mode\\)\")"
+      "Bash(python3 -c \"from PIL import Image; im = Image.open\\('/workspaces/weatherdatalogger-ha/custom_components/weatherdatalogger/brand/icon.png'\\); print\\(im.size, im.mode\\)\")",
+      "Bash(curl -s -o /dev/null -w \"repo page: %{http_code}\\\\n\" \"https://github.com/briis/weatherdatalogger-ha\")",
+      "Bash(curl -s -o /dev/null -w \"api: %{http_code}\\\\n\" \"https://api.github.com/repos/briis/weatherdatalogger-ha\")",
+      "Bash(curl -s -o /dev/null -w \"raw hacs.json: %{http_code}\\\\n\" \"https://raw.githubusercontent.com/briis/weatherdatalogger-ha/main/hacs.json\")"
     ]
   }
 }
