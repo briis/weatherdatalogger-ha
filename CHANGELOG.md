@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-07-08
+
+### Fixed
+
+- Corrected the Danish translations for the *Station pressure* and *Sea level pressure* sensor names.
+- Fixed a missing Python path in the dev container configuration.
+
 ## [0.2.0] - 2026-07-08
 
 ### Added

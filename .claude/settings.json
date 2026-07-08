@@ -54,7 +54,10 @@
       "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -30)",
       "WebFetch(domain:www.hacs.xyz)",
       "WebFetch(domain:developers.home-assistant.io)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -10)",
+      "Bash(git -C /workspaces/WeatherDatalogger-HA diff)",
+      "Bash(git -C /workspaces/WeatherDatalogger-HA log --stat 869b5b4..HEAD)"
     ]
   }
 }
