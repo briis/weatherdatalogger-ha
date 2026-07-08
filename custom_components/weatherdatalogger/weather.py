@@ -25,6 +25,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN, MANUFACTURER, WEATHER_DEVICE_NAME
 from .coordinator import WeatherDataLoggerCoordinator
@@ -41,8 +42,14 @@ async def async_setup_entry(
 
 
 def _row_to_forecast(row: dict, *, daily: bool) -> Forecast:
+    forecast_time = row["forecast_time"]
+    if forecast_time.tzinfo is None:
+        # DB stores forecast_time as naive UTC — mark it explicitly so the
+        # frontend doesn't misread it as naive local time (shifting the
+        # calendar day, which breaks the "is this today?" check).
+        forecast_time = forecast_time.replace(tzinfo=dt_util.UTC)
     forecast: Forecast = {
-        "datetime": row["forecast_time"].isoformat(),
+        "datetime": forecast_time.isoformat(),
         "condition": row.get("weather_condition"),
         "native_wind_speed": row.get("wind_speed_ms"),
         "native_wind_gust_speed": row.get("wind_gust_ms"),
@@ -60,6 +67,20 @@ def _row_to_forecast(row: dict, *, daily: bool) -> Forecast:
     else:
         forecast["native_temperature"] = row.get("temperature_c")
     return forecast
+
+
+def _apply_current_high_low(forecast: Forecast, current: dict | None) -> None:
+    """Prefer forecast_current's live-updated today high/low over forecast_daily's.
+
+    forecast_daily's row for today is a static prediction; forecast_current is
+    refreshed each poll with the actual observed high/low so far today.
+    """
+    if current is None:
+        return
+    if current.get("temperature_high_c") is not None:
+        forecast["native_temperature"] = current["temperature_high_c"]
+    if current.get("temperature_low_c") is not None:
+        forecast["native_templow"] = current["temperature_low_c"]
 
 
 class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], WeatherEntity):
@@ -135,4 +156,8 @@ class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], 
 
     async def async_forecast_daily(self) -> list[Forecast] | None:
         rows = self.coordinator.data.forecast_daily
-        return [_row_to_forecast(row, daily=True) for row in rows] if rows else None
+        if not rows:
+            return None
+        forecasts = [_row_to_forecast(row, daily=True) for row in rows]
+        _apply_current_high_low(forecasts[0], self._current)
+        return forecasts

@@ -1,8 +1,8 @@
 """Tests for the forecast-row-to-HA-Forecast mapping in weather.py."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 
-from custom_components.weatherdatalogger.weather import _row_to_forecast
+from custom_components.weatherdatalogger.weather import _apply_current_high_low, _row_to_forecast
 
 
 def test_row_to_forecast_hourly() -> None:
@@ -23,7 +23,7 @@ def test_row_to_forecast_hourly() -> None:
 
     forecast = _row_to_forecast(row, daily=False)
 
-    assert forecast["datetime"] == "2026-07-07T12:00:00"
+    assert forecast["datetime"] == "2026-07-07T12:00:00+00:00"
     assert forecast["condition"] == "partlycloudy"
     assert forecast["native_temperature"] == 21.5
     assert "native_templow" not in forecast
@@ -47,6 +47,48 @@ def test_row_to_forecast_daily_has_high_low() -> None:
     }
 
     forecast = _row_to_forecast(row, daily=True)
+
+    assert forecast["datetime"] == "2026-07-07T00:00:00+00:00"
+    assert forecast["native_temperature"] == 24.0
+    assert forecast["native_templow"] == 14.0
+
+
+def test_row_to_forecast_keeps_existing_tzinfo() -> None:
+    row = {
+        "forecast_time": datetime(2026, 7, 7, 12, 0, 0, tzinfo=UTC),
+        "weather_condition": "sunny",
+        "temperature_c": 21.5,
+    }
+
+    forecast = _row_to_forecast(row, daily=False)
+
+    assert forecast["datetime"] == "2026-07-07T12:00:00+00:00"
+
+
+def test_apply_current_high_low_overrides_todays_forecast() -> None:
+    forecast = {"native_temperature": 24.0, "native_templow": 14.0}
+    current = {"temperature_high_c": 25.5, "temperature_low_c": 13.5}
+
+    _apply_current_high_low(forecast, current)
+
+    assert forecast["native_temperature"] == 25.5
+    assert forecast["native_templow"] == 13.5
+
+
+def test_apply_current_high_low_keeps_forecast_when_current_missing_fields() -> None:
+    forecast = {"native_temperature": 24.0, "native_templow": 14.0}
+    current = {"temperature_high_c": None, "temperature_low_c": None}
+
+    _apply_current_high_low(forecast, current)
+
+    assert forecast["native_temperature"] == 24.0
+    assert forecast["native_templow"] == 14.0
+
+
+def test_apply_current_high_low_keeps_forecast_when_no_current_row() -> None:
+    forecast = {"native_temperature": 24.0, "native_templow": 14.0}
+
+    _apply_current_high_low(forecast, None)
 
     assert forecast["native_temperature"] == 24.0
     assert forecast["native_templow"] == 14.0
