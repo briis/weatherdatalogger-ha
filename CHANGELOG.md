@@ -5,6 +5,13 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-07-08
+
+### Changed
+
+- *Pressure trend* now reads from the sea level pressure trend field instead of station pressure, and a new *Pressure trend value* sensor exposes the underlying mb value. Both are no longer marked as diagnostic entities.
+- Documented in the README that lightning sensors stay unavailable until the first detected strike, and pressure trend sensors need up to 3 hours after WeatherDatalogger's first start before they report a value.
+
 ## [0.2.1] - 2026-07-08
 
 ### Fixed

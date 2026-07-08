@@ -45,6 +45,9 @@ A single `weather.*` entity exposing:
 
 Several of these (dew point, heat index, wind chill, wet bulb, station pressure, pressure trend, wind lull, wind Beaufort, solar radiation, lightning\*, CAQI\*, battery voltage, wind bearing average today) are marked as **diagnostic** entities, so they're grouped separately in the entity list rather than cluttering the main dashboard.
 
+> [!NOTE]
+> Some sensors are unavailable until the underlying calculation has enough data behind it: the **lightning** sensors stay unset until WeatherDatalogger first detects a strike, and **pressure trend** / **pressure trend value** need up to 3 hours of history after WeatherDatalogger's first start before they report a value.
+
 ## Prerequisites
 
 This integration is a read-only Home Assistant frontend for **[WeatherDatalogger](https://github.com/briis/WeatherDatalogger)** — a separate project that polls your weather station(s) and writes the merged readings and forecast data into a MariaDB database. WeatherDatalogger must already be installed, configured, and running before this add-on has anything to read; see its repository for setup instructions.

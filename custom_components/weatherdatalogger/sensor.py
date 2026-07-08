@@ -160,8 +160,16 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
     WeatherDataLoggerSensorDescription(
         key="pressure_trend",
         translation_key="pressure_trend",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_get("pressure_trend"),
+        value_fn=_get("sea_level_pressure_trend"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="sea_level_pressure_trend_mb",
+        translation_key="sea_level_pressure_trend_mb",
+        device_class=SensorDeviceClass.PRESSURE,
+        native_unit_of_measurement=UnitOfPressure.HPA,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        value_fn=_get("sea_level_pressure_trend_mb"),
     ),
     # Wind
     WeatherDataLoggerSensorDescription(
