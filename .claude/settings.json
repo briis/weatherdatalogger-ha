@@ -40,7 +40,10 @@
       "Bash(graphify export *)",
       "Bash(git -C /workspaces/weatherdatalogger-ha status)",
       "Bash(git check-ignore *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(ruff check *)",
+      "Bash(bash scripts/lint)",
+      "Bash(bash scripts/lint *)"
     ]
   }
 }
