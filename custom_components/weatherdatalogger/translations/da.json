@@ -96,10 +96,10 @@
         "name": "Indendørs luftfugtighed"
       },
       "station_pressure": {
-        "name": "Stationstryk"
+        "name": "Stationslufttryk"
       },
       "sea_level_pressure": {
-        "name": "Havnedestryk"
+        "name": "Lufttryk"
       },
       "pressure_trend": {
         "name": "Tryktendens"

@@ -38,7 +38,7 @@
 				"files.trimTrailingWhitespace": true,
 				"python.analysis.typeCheckingMode": "basic",
 				"python.analysis.autoImportCompletions": true,
-				"python.defaultInterpreterPath": "/usr/local/bin/python3",
+				"python.defaultInterpreterPath": "/usr/local/python/current/bin/python3",
 				"[python]": {
 					"editor.defaultFormatter": "charliermarsh.ruff"
 				}
