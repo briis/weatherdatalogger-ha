@@ -23,3 +23,15 @@ jobs:
         run: |
           yq -i -o json '.version="${{ github.event.release.tag_name }}"' \
             "${{ github.workspace }}/custom_components/weatherdatalogger/manifest.json"
+
+
+      - name: "ZIP the integration directory"
+        shell: "bash"
+        run: |
+          cd "${{ github.workspace }}/custom_components/weatherdatalogger"
+          zip visualcrossing.zip -r ./
+
+      - name: "Upload the ZIP file to the release"
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ${{ github.workspace }}/custom_components/weatherdatalogger/weatherdatalogger_ha.zip
