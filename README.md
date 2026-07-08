@@ -6,6 +6,11 @@
 
 [![Validate](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/validate.yml/badge.svg)](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/validate.yml)
 [![Test](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/test.yml/badge.svg)](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/test.yml)
+[![GitHub Release](https://img.shields.io/github/release/briis/WeatherDatalogger-HA.svg)](https://github.com/briis/WeatherDatalogger-HA/releases)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/m/briis/WeatherDatalogger-HA.svg)](https://github.com/briis/WeatherDatalogger-HA/commits/main)
+[![License](https://img.shields.io/github/license/briis/WeatherDatalogger-HA.svg)](LICENSE)
+[![hacs](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![Project Maintenance](https://img.shields.io/badge/maintainer-Bjarne%20Riis-blue.svg)](https://github.com/briis)
 
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
