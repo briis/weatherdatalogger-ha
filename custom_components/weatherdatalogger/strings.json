@@ -10,8 +10,15 @@
           "database": "Database name",
           "username": "Username",
           "password": "Password",
-          "location": "Forecast location",
-          "location_description": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\""
+          "location": "Forecast location"
+        },
+        "data_description": {
+          "host": "Hostname or IP address of the MariaDB server.",
+          "port": "TCP port the MariaDB server listens on.",
+          "database": "Name of the database containing the weatherdatalogger tables.",
+          "username": "Database user used to read the weather data. A read-only account is recommended.",
+          "password": "Password for the database user.",
+          "location": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\"."
         }
       }
     },
