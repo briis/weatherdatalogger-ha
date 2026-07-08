@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="custom_components/weatherdatalogger/brand/logo.png" alt="WeatherDataLogger logo" width="360">
+  <img src="https://github.com/briis/WeatherDatalogger-HA/blob/main/custom_components/weatherdatalogger/brand/logo.png?raw=true" alt="WeatherDataLogger logo" width="360">
 </p>
 
 # WeatherDataLogger for Home Assistant
