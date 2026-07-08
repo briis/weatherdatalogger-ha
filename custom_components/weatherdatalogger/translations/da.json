@@ -102,10 +102,10 @@
         "name": "Lufttryk"
       },
       "pressure_trend": {
-        "name": "Tryktendens"
+        "name": "Lufttryk tendens"
       },
       "sea_level_pressure_trend_mb": {
-        "name": "Tryktendensværdi"
+        "name": "Lufttryk tendens værdi"
       },
       "wind_speed": {
         "name": "Vindhastighed"
