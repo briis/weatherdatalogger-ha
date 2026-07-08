@@ -20,6 +20,26 @@
           "password": "Adgangskode til databasebrugeren.",
           "location": "Skal matche [visualcrossing]-lokationsindstillingen på skrive-siden — standard er \"home\"."
         }
+      },
+      "reconfigure": {
+        "title": "Opdater WeatherDataLogger-forbindelse",
+        "description": "Opdater forbindelsesoplysningerne for weatherdatalogger MariaDB-databasen. De nuværende værdier er udfyldt på forhånd nedenfor.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "database": "Databasenavn",
+          "username": "Brugernavn",
+          "password": "Adgangskode",
+          "location": "Vejrudsigtslokation"
+        },
+        "data_description": {
+          "host": "Værtsnavn eller IP-adresse på MariaDB-serveren.",
+          "port": "TCP-port som MariaDB-serveren lytter på.",
+          "database": "Navnet på databasen, der indeholder weatherdatalogger-tabellerne.",
+          "username": "Databasebruger, der bruges til at læse vejrdata. En skrivebeskyttet konto anbefales.",
+          "password": "Adgangskode til databasebrugeren.",
+          "location": "Skal matche [visualcrossing]-lokationsindstillingen på skrive-siden — standard er \"home\"."
+        }
       }
     },
     "error": {
@@ -28,7 +48,8 @@
       "unknown": "Uventet fejl."
     },
     "abort": {
-      "already_configured": "Denne database/lokation er allerede konfigureret."
+      "already_configured": "Denne database/lokation er allerede konfigureret.",
+      "reconfigure_successful": "Forbindelsesindstillingerne blev opdateret."
     }
   },
   "entity": {

@@ -20,6 +20,26 @@
           "password": "Password for the database user.",
           "location": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\"."
         }
+      },
+      "reconfigure": {
+        "title": "Update WeatherDataLogger connection",
+        "description": "Update the connection details for the weatherdatalogger MariaDB database. Current values are pre-filled below.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "database": "Database name",
+          "username": "Username",
+          "password": "Password",
+          "location": "Forecast location"
+        },
+        "data_description": {
+          "host": "Hostname or IP address of the MariaDB server.",
+          "port": "TCP port the MariaDB server listens on.",
+          "database": "Name of the database containing the weatherdatalogger tables.",
+          "username": "Database user used to read the weather data. A read-only account is recommended.",
+          "password": "Password for the database user.",
+          "location": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\"."
+        }
       }
     },
     "error": {
@@ -28,7 +48,8 @@
       "unknown": "Unexpected error."
     },
     "abort": {
-      "already_configured": "This database/location is already configured."
+      "already_configured": "This database/location is already configured.",
+      "reconfigure_successful": "The connection settings were updated successfully."
     }
   },
   "entity": {

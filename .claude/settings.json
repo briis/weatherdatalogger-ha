@@ -43,7 +43,12 @@
       "Bash(git rm *)",
       "Bash(ruff check *)",
       "Bash(bash scripts/lint)",
-      "Bash(bash scripts/lint *)"
+      "Bash(bash scripts/lint *)",
+      "Bash(python3 -m json.tool /workspaces/WeatherDatalogger-HA/custom_components/weatherdatalogger/strings.json)",
+      "Bash(python3 -m json.tool /workspaces/WeatherDatalogger-HA/custom_components/weatherdatalogger/translations/da.json)",
+      "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py)",
+      "Bash(python3 -m pytest tests/test_config_flow.py -q)",
+      "Bash(python3 -m pytest tests/test_config_flow.py -v)"
     ]
   }
 }
