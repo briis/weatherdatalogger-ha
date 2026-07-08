@@ -7,16 +7,33 @@ from typing import Any
 
 import pymysql
 import voluptuous as vol
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME
-from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import (
+    SOURCE_RECONFIGURE,
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlowWithReload,
+)
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_SCAN_INTERVAL,
+    CONF_USERNAME,
+    UnitOfTime,
+)
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig, NumberSelectorMode
 
 from .const import (
     CONF_LOCATION,
     DEFAULT_DATABASE,
     DEFAULT_LOCATION,
     DEFAULT_PORT,
+    DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    MAX_SCAN_INTERVAL,
+    MIN_SCAN_INTERVAL,
 )
 from .db import WeatherDataLoggerClient, WeatherDataLoggerConfig
 
@@ -62,16 +79,41 @@ class WeatherDataLoggerConfigFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> WeatherDataLoggerOptionsFlow:
+        """Return the options flow for changing the polling interval."""
+        return WeatherDataLoggerOptionsFlow()
+
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the initial step."""
+        return await self._async_handle_step(user_input, step_id="user")
+
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Handle re-running setup for an existing entry (e.g. host details changed)."""
+        return await self._async_handle_step(user_input, step_id="reconfigure")
+
+    async def _async_handle_step(
+        self, user_input: dict[str, Any] | None, *, step_id: str
+    ) -> ConfigFlowResult:
         errors: dict[str, str] = {}
+        reconfigure_entry = (
+            self._get_reconfigure_entry() if self.source == SOURCE_RECONFIGURE else None
+        )
 
         if user_input is not None:
-            await self.async_set_unique_id(
+            unique_id = (
                 f"{user_input[CONF_HOST]}:{user_input[CONF_PORT]}"
                 f"/{user_input[CONF_DATABASE]}/{user_input[CONF_LOCATION]}"
             )
-            self._abort_if_unique_id_configured()
+            await self.async_set_unique_id(unique_id)
+            # Only enforce the collision check against *other* entries — a
+            # reconfigure that leaves the unique ID unchanged would otherwise
+            # collide with the entry being reconfigured itself.
+            if reconfigure_entry is None or reconfigure_entry.unique_id != unique_id:
+                self._abort_if_unique_id_configured()
 
             try:
                 await _async_validate_input(self.hass, user_input)
@@ -83,14 +125,52 @@ class WeatherDataLoggerConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception("Unexpected exception during WeatherDataLogger setup")
                 errors["base"] = "unknown"
             else:
-                return self.async_create_entry(
-                    title=f"WeatherDataLogger ({user_input[CONF_LOCATION]})",
+                title = f"WeatherDataLogger ({user_input[CONF_LOCATION]})"
+                if reconfigure_entry is None:
+                    return self.async_create_entry(title=title, data=user_input)
+                return self.async_update_reload_and_abort(
+                    reconfigure_entry,
+                    unique_id=unique_id,
+                    title=title,
                     data=user_input,
                 )
 
-        return self.async_show_form(
-            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
+        # Pre-fill with whatever the user just submitted (on a validation
+        # error) or, failing that, the current entry's values (on reconfigure).
+        suggested_values = user_input or (reconfigure_entry.data if reconfigure_entry else None)
+        data_schema = self.add_suggested_values_to_schema(STEP_USER_DATA_SCHEMA, suggested_values)
+
+        return self.async_show_form(step_id=step_id, data_schema=data_schema, errors=errors)
+
+
+class WeatherDataLoggerOptionsFlow(OptionsFlowWithReload):
+    """Handle options for an existing WeatherDataLogger entry (polling interval)."""
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Manage the polling interval option."""
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+
+        data_schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_SCAN_INTERVAL,
+                    default=self.config_entry.options.get(
+                        CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+                    ),
+                ): NumberSelector(
+                    NumberSelectorConfig(
+                        min=MIN_SCAN_INTERVAL,
+                        max=MAX_SCAN_INTERVAL,
+                        step=1,
+                        unit_of_measurement=UnitOfTime.SECONDS,
+                        mode=NumberSelectorMode.BOX,
+                    )
+                ),
+            }
         )
+
+        return self.async_show_form(step_id="init", data_schema=data_schema)
 
 
 class CannotConnect(Exception):

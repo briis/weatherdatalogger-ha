@@ -8,7 +8,13 @@ role to).
 from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_PASSWORD, CONF_PORT, CONF_USERNAME
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_PASSWORD,
+    CONF_PORT,
+    CONF_SCAN_INTERVAL,
+    CONF_USERNAME,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.typing import ConfigType
@@ -36,7 +42,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigE
     )
 
     coordinator = WeatherDataLoggerCoordinator(
-        hass, entry, client, entry.options.get("scan_interval", DEFAULT_SCAN_INTERVAL)
+        hass, entry, client, entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
     )
 
     try:

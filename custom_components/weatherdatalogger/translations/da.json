@@ -1,0 +1,178 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Opret forbindelse til WeatherDataLogger",
+        "description": "Angiv forbindelsesoplysningerne for weatherdatalogger MariaDB-databasen. Det anbefales at bruge en skrivebeskyttet databasebruger — se sql/create_readonly_user.sql i WeatherDatalogger-HA-repoet.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "database": "Databasenavn",
+          "username": "Brugernavn",
+          "password": "Adgangskode",
+          "location": "Vejrudsigtslokation"
+        },
+        "data_description": {
+          "host": "Værtsnavn eller IP-adresse på MariaDB-serveren.",
+          "port": "TCP-port som MariaDB-serveren lytter på.",
+          "database": "Navnet på databasen, der indeholder weatherdatalogger-tabellerne.",
+          "username": "Databasebruger, der bruges til at læse vejrdata. En skrivebeskyttet konto anbefales.",
+          "password": "Adgangskode til databasebrugeren.",
+          "location": "Skal matche [visualcrossing]-lokationsindstillingen i WeatherDatalogger — standard er \"home\"."
+        }
+      },
+      "reconfigure": {
+        "title": "Opdater WeatherDataLogger-forbindelse",
+        "description": "Opdater forbindelsesoplysningerne for weatherdatalogger MariaDB-databasen. De nuværende værdier er udfyldt på forhånd nedenfor.",
+        "data": {
+          "host": "Vært",
+          "port": "Port",
+          "database": "Databasenavn",
+          "username": "Brugernavn",
+          "password": "Adgangskode",
+          "location": "Vejrudsigtslokation"
+        },
+        "data_description": {
+          "host": "Værtsnavn eller IP-adresse på MariaDB-serveren.",
+          "port": "TCP-port som MariaDB-serveren lytter på.",
+          "database": "Navnet på databasen, der indeholder weatherdatalogger-tabellerne.",
+          "username": "Databasebruger, der bruges til at læse vejrdata. En skrivebeskyttet konto anbefales.",
+          "password": "Adgangskode til databasebrugeren.",
+          "location": "Skal matche [visualcrossing]-lokationsindstillingen i WeatherDatalogger— standard er \"home\"."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kunne ikke oprette forbindelse — tjek vært/port, og at combined_realtime findes i den valgte database.",
+      "invalid_auth": "Forkert brugernavn eller adgangskode.",
+      "unknown": "Uventet fejl."
+    },
+    "abort": {
+      "already_configured": "Denne database/lokation er allerede konfigureret.",
+      "reconfigure_successful": "Forbindelsesindstillingerne blev opdateret."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "WeatherDataLogger-indstillinger",
+        "description": "Justér, hvor ofte databasen forespørges for nye målinger.",
+        "data": {
+          "scan_interval": "Opdateringsinterval"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte (i sekunder, 15-300) databasen forespørges for nye målinger."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "air_temperature": {
+        "name": "Temperatur"
+      },
+      "relative_humidity": {
+        "name": "Luftfugtighed"
+      },
+      "dew_point": {
+        "name": "Dugpunkt"
+      },
+      "feels_like": {
+        "name": "Føles som"
+      },
+      "heat_index": {
+        "name": "Varmeindeks"
+      },
+      "wind_chill": {
+        "name": "Vindafkøling"
+      },
+      "wet_bulb": {
+        "name": "Vådtermometer"
+      },
+      "indoor_temperature": {
+        "name": "Indendørs temperatur"
+      },
+      "indoor_humidity": {
+        "name": "Indendørs luftfugtighed"
+      },
+      "station_pressure": {
+        "name": "Stationstryk"
+      },
+      "sea_level_pressure": {
+        "name": "Havnedestryk"
+      },
+      "pressure_trend": {
+        "name": "Tryktendens"
+      },
+      "wind_speed": {
+        "name": "Vindhastighed"
+      },
+      "wind_gust": {
+        "name": "Vindstød"
+      },
+      "wind_lull": {
+        "name": "Vindstille"
+      },
+      "wind_direction": {
+        "name": "Vindretning"
+      },
+      "wind_beaufort": {
+        "name": "Vind (Beaufort)"
+      },
+      "illuminance": {
+        "name": "Belysningsstyrke"
+      },
+      "uv_index": {
+        "name": "UV-indeks"
+      },
+      "solar_radiation": {
+        "name": "Solindstråling"
+      },
+      "rain_accumulation_today": {
+        "name": "Regn i dag"
+      },
+      "rain_rate": {
+        "name": "Regnintensitet"
+      },
+      "lightning_count": {
+        "name": "Lynnedslag (3t)"
+      },
+      "lightning_distance": {
+        "name": "Afstand til lyn"
+      },
+      "lightning_last_detected": {
+        "name": "Seneste lynregistrering"
+      },
+      "pm_2p5": {
+        "name": "PM2.5"
+      },
+      "pm_10": {
+        "name": "PM10"
+      },
+      "aqi_pm2p5": {
+        "name": "AQI (PM2.5)"
+      },
+      "aqi_pm10": {
+        "name": "AQI (PM10)"
+      },
+      "caqi_pm2p5": {
+        "name": "CAQI (PM2.5)"
+      },
+      "caqi_pm10": {
+        "name": "CAQI (PM10)"
+      },
+      "battery_voltage": {
+        "name": "Batterispænding"
+      },
+      "wind_gust_high_today": {
+        "name": "Højeste vindstød i dag"
+      },
+      "wind_bearing_avg_day": {
+        "name": "Gennemsnitlig vindretning i dag"
+      },
+      "rain_total_yesterday": {
+        "name": "Regn i alt i går"
+      }
+    }
+  }
+}
