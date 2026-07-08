@@ -73,6 +73,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.HUMIDITY,
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
         value_fn=_get("relative_humidity_pct"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -133,6 +134,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.HUMIDITY,
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
         value_fn=_get("indoor_humidity_pct"),
     ),
     # Pressure
@@ -143,6 +145,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         native_unit_of_measurement=UnitOfPressure.HPA,
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
+        suggested_display_precision=1,
         value_fn=_get("station_pressure_mb"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -151,6 +154,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.PRESSURE,
         native_unit_of_measurement=UnitOfPressure.HPA,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
         value_fn=_get("sea_level_pressure_mb"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -220,6 +224,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         key="uv_index",
         translation_key="uv_index",
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
         icon="mdi:sun-wireless-outline",
         value_fn=_get("uv_index"),
     ),
