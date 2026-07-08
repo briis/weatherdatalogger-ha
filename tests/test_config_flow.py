@@ -139,3 +139,37 @@ async def test_reconfigure_flow_success_updates_entry(hass: HomeAssistant) -> No
     assert len(entries) == 1
     assert entries[0].entry_id == entry.entry_id
     assert entries[0].data["host"] == "192.168.1.50"
+
+
+async def test_options_flow_defaults_to_current_scan_interval(hass: HomeAssistant) -> None:
+    """The options form defaults to the current polling interval."""
+    entry = await _setup_entry(hass)
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "init"
+    schema = result["data_schema"].schema
+    (scan_interval_key,) = [key for key in schema if key.schema == "scan_interval"]
+    assert scan_interval_key.default() == 60
+
+
+async def test_options_flow_updates_scan_interval_and_reloads(hass: HomeAssistant) -> None:
+    """Submitting a new interval updates entry.options and reloads the entry."""
+    entry = await _setup_entry(hass)
+
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+
+    with (
+        patch(
+            "custom_components.weatherdatalogger.config_flow.WeatherDataLoggerClient.test_connection"
+        ),
+        patch("custom_components.weatherdatalogger.async_setup_entry", return_value=True),
+    ):
+        result = await hass.config_entries.options.async_configure(
+            result["flow_id"], {"scan_interval": 15}
+        )
+        await hass.async_block_till_done()
+
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert entry.options["scan_interval"] == 15

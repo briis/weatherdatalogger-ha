@@ -12,7 +12,7 @@ A Home Assistant custom integration for [WeatherDatalogger](https://github.com/b
 - **WeatherDataLogger Forecast** — a `weather` entity sourced from the Visual Crossing forecast tables (`forecast_current` / `forecast_hourly` / `forecast_daily`), with current conditions plus hourly and daily forecasts.
 - **WeatherDataLogger Station** — ~30 `sensor` entities sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
 
-This integration is **polling, not push-based**: it queries the database on a fixed interval (default 60s) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
+This integration is **polling, not push-based**: it queries the database on an interval (default 60s, configurable from 15s to 5 minutes — see [Options](#options)) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
 
 ## Entities
 
@@ -74,9 +74,17 @@ Settings → Devices & Services → Add Integration → **WeatherDataLogger**, t
 | Database name | `weatherdatalogger` | |
 | Username | — | The read-only user created above |
 | Password | — | |
-| Forecast location | `home` | Must match the `[visualcrossing]` `location` setting on the writer side |
+| Forecast location | `home` | Must match the `[visualcrossing]` `location` setting in WeatherDatalogger |
 
-Connectivity and credentials are validated against `combined_realtime` before the entry is created.
+Connectivity and credentials are validated against `combined_realtime` before the entry is created. The config flow UI is available in **English and Danish** (`translations/en.json`, `translations/da.json`), following the browser/HA-instance language.
+
+### Reconfigure
+
+If the database host, port, credentials, or forecast location change later, there's no need to remove and re-add the integration: open the entry's **⋮** menu on Settings → Devices & Services and choose **Reconfigure**. The form is pre-filled with the current values, and the underlying config entry is updated and reloaded in place — entity IDs and history are preserved.
+
+### Options
+
+The polling interval can be tuned after setup without removing the entry: entry's **⋮** menu → **Options** (or the settings/cog on newer HA frontends) → **Polling interval**, from 15 seconds up to 5 minutes (300s). Saving reloads the entry automatically so the new interval takes effect immediately.
 
 ## Development
 
@@ -97,12 +105,13 @@ Other tasks: **"Run tests"** (pytest), **"Lint (ruff)"** (ruff check).
 ```
 custom_components/weatherdatalogger/
   __init__.py       Config entry setup/teardown, coordinator wiring
-  config_flow.py    UI setup flow (host/port/db/user/pass/location)
+  config_flow.py    UI setup, reconfigure, and options flows (host/port/db/user/pass/location, polling interval)
   coordinator.py    DataUpdateCoordinator — polls the DB on scan_interval
   db.py             Synchronous PyMySQL access (combined_realtime*, forecast_*)
   weather.py        `weather` entity (forecast device)
   sensor.py         `sensor` entities (station device)
   brand/            Icon and logo used in Home Assistant and HACS
+  strings.json / translations/{en,da}.json   Config/options flow and entity translations
 sql/create_readonly_user.sql   Grants for a read-only HA DB user
 tests/                         pytest-homeassistant-custom-component tests
 ```

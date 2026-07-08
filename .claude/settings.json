@@ -48,7 +48,8 @@
       "Bash(python3 -m json.tool /workspaces/WeatherDatalogger-HA/custom_components/weatherdatalogger/translations/da.json)",
       "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py)",
       "Bash(python3 -m pytest tests/test_config_flow.py -q)",
-      "Bash(python3 -m pytest tests/test_config_flow.py -v)"
+      "Bash(python3 -m pytest tests/test_config_flow.py -v)",
+      "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py custom_components/weatherdatalogger/__init__.py custom_components/weatherdatalogger/const.py)"
     ]
   }
 }

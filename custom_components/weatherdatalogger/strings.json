@@ -18,7 +18,7 @@
           "database": "Name of the database containing the weatherdatalogger tables.",
           "username": "Database user used to read the weather data. A read-only account is recommended.",
           "password": "Password for the database user.",
-          "location": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\"."
+          "location": "Matches the [visualcrossing] location setting in WeatherDatalogger — defaults to \"home\"."
         }
       },
       "reconfigure": {
@@ -38,7 +38,7 @@
           "database": "Name of the database containing the weatherdatalogger tables.",
           "username": "Database user used to read the weather data. A read-only account is recommended.",
           "password": "Password for the database user.",
-          "location": "Matches the [visualcrossing] location setting on the writer side — defaults to \"home\"."
+          "location": "Matches the [visualcrossing] location setting in WeatherDatalogger — defaults to \"home\"."
         }
       }
     },
@@ -52,43 +52,127 @@
       "reconfigure_successful": "The connection settings were updated successfully."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "WeatherDataLogger options",
+        "description": "Adjust how often the database is polled for new readings.",
+        "data": {
+          "scan_interval": "Polling interval"
+        },
+        "data_description": {
+          "scan_interval": "How often (in seconds, 15-300) to poll the database for new readings."
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
-      "air_temperature": { "name": "Temperature" },
-      "relative_humidity": { "name": "Humidity" },
-      "dew_point": { "name": "Dew point" },
-      "feels_like": { "name": "Feels like" },
-      "heat_index": { "name": "Heat index" },
-      "wind_chill": { "name": "Wind chill" },
-      "wet_bulb": { "name": "Wet bulb" },
-      "indoor_temperature": { "name": "Indoor temperature" },
-      "indoor_humidity": { "name": "Indoor humidity" },
-      "station_pressure": { "name": "Station pressure" },
-      "sea_level_pressure": { "name": "Sea level pressure" },
-      "pressure_trend": { "name": "Pressure trend" },
-      "wind_speed": { "name": "Wind speed" },
-      "wind_gust": { "name": "Wind gust" },
-      "wind_lull": { "name": "Wind lull" },
-      "wind_direction": { "name": "Wind direction" },
-      "wind_beaufort": { "name": "Wind (Beaufort)" },
-      "illuminance": { "name": "Illuminance" },
-      "uv_index": { "name": "UV index" },
-      "solar_radiation": { "name": "Solar radiation" },
-      "rain_accumulation_today": { "name": "Rain today" },
-      "rain_rate": { "name": "Rain rate" },
-      "lightning_count": { "name": "Lightning strikes (3h)" },
-      "lightning_distance": { "name": "Lightning distance" },
-      "lightning_last_detected": { "name": "Lightning last detected" },
-      "pm_2p5": { "name": "PM2.5" },
-      "pm_10": { "name": "PM10" },
-      "aqi_pm2p5": { "name": "AQI (PM2.5)" },
-      "aqi_pm10": { "name": "AQI (PM10)" },
-      "caqi_pm2p5": { "name": "CAQI (PM2.5)" },
-      "caqi_pm10": { "name": "CAQI (PM10)" },
-      "battery_voltage": { "name": "Battery voltage" },
-      "wind_gust_high_today": { "name": "Wind gust high today" },
-      "wind_bearing_avg_day": { "name": "Wind bearing average today" },
-      "rain_total_yesterday": { "name": "Rain total yesterday" }
+      "air_temperature": {
+        "name": "Temperature"
+      },
+      "relative_humidity": {
+        "name": "Humidity"
+      },
+      "dew_point": {
+        "name": "Dew point"
+      },
+      "feels_like": {
+        "name": "Feels like"
+      },
+      "heat_index": {
+        "name": "Heat index"
+      },
+      "wind_chill": {
+        "name": "Wind chill"
+      },
+      "wet_bulb": {
+        "name": "Wet bulb"
+      },
+      "indoor_temperature": {
+        "name": "Indoor temperature"
+      },
+      "indoor_humidity": {
+        "name": "Indoor humidity"
+      },
+      "station_pressure": {
+        "name": "Station pressure"
+      },
+      "sea_level_pressure": {
+        "name": "Sea level pressure"
+      },
+      "pressure_trend": {
+        "name": "Pressure trend"
+      },
+      "wind_speed": {
+        "name": "Wind speed"
+      },
+      "wind_gust": {
+        "name": "Wind gust"
+      },
+      "wind_lull": {
+        "name": "Wind lull"
+      },
+      "wind_direction": {
+        "name": "Wind direction"
+      },
+      "wind_beaufort": {
+        "name": "Wind (Beaufort)"
+      },
+      "illuminance": {
+        "name": "Illuminance"
+      },
+      "uv_index": {
+        "name": "UV index"
+      },
+      "solar_radiation": {
+        "name": "Solar radiation"
+      },
+      "rain_accumulation_today": {
+        "name": "Rain today"
+      },
+      "rain_rate": {
+        "name": "Rain rate"
+      },
+      "lightning_count": {
+        "name": "Lightning strikes (3h)"
+      },
+      "lightning_distance": {
+        "name": "Lightning distance"
+      },
+      "lightning_last_detected": {
+        "name": "Lightning last detected"
+      },
+      "pm_2p5": {
+        "name": "PM2.5"
+      },
+      "pm_10": {
+        "name": "PM10"
+      },
+      "aqi_pm2p5": {
+        "name": "AQI (PM2.5)"
+      },
+      "aqi_pm10": {
+        "name": "AQI (PM10)"
+      },
+      "caqi_pm2p5": {
+        "name": "CAQI (PM2.5)"
+      },
+      "caqi_pm10": {
+        "name": "CAQI (PM10)"
+      },
+      "battery_voltage": {
+        "name": "Battery voltage"
+      },
+      "wind_gust_high_today": {
+        "name": "Wind gust high today"
+      },
+      "wind_bearing_avg_day": {
+        "name": "Wind bearing average today"
+      },
+      "rain_total_yesterday": {
+        "name": "Rain total yesterday"
+      }
     }
   }
 }
