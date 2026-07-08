@@ -57,7 +57,9 @@
       "WebSearch",
       "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -10)",
       "Bash(git -C /workspaces/WeatherDatalogger-HA diff)",
-      "Bash(git -C /workspaces/WeatherDatalogger-HA log --stat 869b5b4..HEAD)"
+      "Bash(git -C /workspaces/WeatherDatalogger-HA log --stat 869b5b4..HEAD)",
+      "Bash(python -m pytest tests/test_sensor.py -q)",
+      "Bash(python -c ' *)"
     ]
   }
 }

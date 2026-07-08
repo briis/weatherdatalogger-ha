@@ -104,6 +104,9 @@
       "pressure_trend": {
         "name": "Tryktendens"
       },
+      "sea_level_pressure_trend_mb": {
+        "name": "Tryktendensværdi"
+      },
       "wind_speed": {
         "name": "Vindhastighed"
       },
