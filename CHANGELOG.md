@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Reconfigure flow**: update the database host, port, credentials, or forecast location for an existing entry from Settings → Devices & Services → entry **⋮** menu → *Reconfigure*, without removing and re-adding the integration. The form is pre-filled with the entry's current values.
 - **Options flow**: change the polling interval after setup (15 seconds to 5 minutes, default 60s) from the entry's *Options*. Saving reloads the entry automatically.
 - Helper text for every config flow field, and a Danish translation of the config flow, options flow, and entity names, alongside English.
-- Changed display precision for several sensors.
 
 ### Changed
 
