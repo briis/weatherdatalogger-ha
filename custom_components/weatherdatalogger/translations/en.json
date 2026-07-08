@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to WeatherDataLogger",
-        "description": "Enter the connection details for the weatherdatalogger MariaDB database. A read-only DB user is recommended — see sql/create_readonly_user.sql in the weatherdatalogger-ha repo.",
+        "description": "Enter the connection details for the weatherdatalogger MariaDB database. A read-only DB user is recommended — see sql/create_readonly_user.sql in the WeatherDatalogger-HA repo.",
         "data": {
           "host": "Host",
           "port": "Port",

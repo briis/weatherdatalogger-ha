@@ -4,8 +4,8 @@
 
 # WeatherDataLogger for Home Assistant
 
-[![Validate](https://github.com/briis/weatherdatalogger-ha/actions/workflows/validate.yml/badge.svg)](https://github.com/briis/weatherdatalogger-ha/actions/workflows/validate.yml)
-[![Test](https://github.com/briis/weatherdatalogger-ha/actions/workflows/test.yml/badge.svg)](https://github.com/briis/weatherdatalogger-ha/actions/workflows/test.yml)
+[![Validate](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/validate.yml/badge.svg)](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/validate.yml)
+[![Test](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/test.yml/badge.svg)](https://github.com/briis/WeatherDatalogger-HA/actions/workflows/test.yml)
 
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
