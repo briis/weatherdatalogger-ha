@@ -49,7 +49,9 @@
       "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py)",
       "Bash(python3 -m pytest tests/test_config_flow.py -q)",
       "Bash(python3 -m pytest tests/test_config_flow.py -v)",
-      "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py custom_components/weatherdatalogger/__init__.py custom_components/weatherdatalogger/const.py)"
+      "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py custom_components/weatherdatalogger/__init__.py custom_components/weatherdatalogger/const.py)",
+      "Bash(git -C /workspaces/WeatherDatalogger-HA tag)",
+      "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -30)"
     ]
   }
 }

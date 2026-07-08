@@ -116,6 +116,10 @@ sql/create_readonly_user.sql   Grants for a read-only HA DB user
 tests/                         pytest-homeassistant-custom-component tests
 ```
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
 ## License
 
 [MIT](LICENSE) — Copyright (c) 2026 Bjarne Riis.
