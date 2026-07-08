@@ -51,7 +51,10 @@
       "Bash(python3 -m pytest tests/test_config_flow.py -v)",
       "Bash(python3 -m py_compile custom_components/weatherdatalogger/config_flow.py custom_components/weatherdatalogger/__init__.py custom_components/weatherdatalogger/const.py)",
       "Bash(git -C /workspaces/WeatherDatalogger-HA tag)",
-      "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -30)"
+      "Bash(git -C /workspaces/WeatherDatalogger-HA log --oneline -30)",
+      "WebFetch(domain:www.hacs.xyz)",
+      "WebFetch(domain:developers.home-assistant.io)",
+      "WebSearch"
     ]
   }
 }
