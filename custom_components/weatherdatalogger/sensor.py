@@ -252,6 +252,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.PRECIPITATION,
         native_unit_of_measurement=UnitOfPrecipitationDepth.MILLIMETERS,
         state_class=SensorStateClass.TOTAL_INCREASING,
+        suggested_display_precision=1,
         value_fn=_get("rain_accumulation_mm"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -260,6 +261,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.PRECIPITATION_INTENSITY,
         native_unit_of_measurement=UnitOfVolumetricFlux.MILLIMETERS_PER_HOUR,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
         value_fn=_get("rain_rate_mmh"),
     ),
     # Lightning
@@ -371,6 +373,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.PRECIPITATION,
         native_unit_of_measurement=UnitOfPrecipitationDepth.MILLIMETERS,
         state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
         source="stats",
         value_fn=_get("rain_total_yesterday"),
     ),
