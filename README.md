@@ -75,7 +75,7 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | CAQI (PM2.5) | ✓ | European Common Air Quality Index derived from PM2.5. |
 | CAQI (PM10) | ✓ | European Common Air Quality Index derived from PM10. |
 | **Device** | | |
-| Battery voltage | ✓ | The station's reporting battery voltage. |
+| Battery voltage | ✓ | The station's reporting battery voltage. Only created if the paired hardware reports it (Tempest does; Davis stations never populate this field, so the entity is skipped rather than added as permanently unavailable). |
 | **Daily/rolling stats** | | |
 | Wind gust high today | | Highest wind gust recorded since local midnight. |
 | Wind bearing average today | ✓ | Average wind direction since local midnight. |

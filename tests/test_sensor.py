@@ -1,6 +1,9 @@
 """Tests for the sensor description table in sensor.py."""
 
-from custom_components.weatherdatalogger.sensor import SENSOR_DESCRIPTIONS
+from dataclasses import dataclass
+from typing import Any
+
+from custom_components.weatherdatalogger.sensor import SENSOR_DESCRIPTIONS, _has_initial_value
 
 REALTIME_ROW = {
     "air_temperature_c": 18.4,
@@ -37,3 +40,43 @@ def test_stats_sources_are_flagged() -> None:
         "wind_bearing_avg_day",
         "rain_total_yesterday",
     }
+
+
+def test_only_battery_voltage_is_flagged_skip_if_none() -> None:
+    # battery_volts is Tempest-only; Davis stations leave it NULL forever, so
+    # it's the only sensor that should be dropped when unpopulated.
+    flagged = {d.key for d in SENSOR_DESCRIPTIONS if d.skip_if_none}
+    assert flagged == {"battery_volts"}
+
+
+@dataclass
+class _FakeSnapshot:
+    realtime: dict[str, Any] | None
+    realtime_stats: dict[str, Any] | None = None
+
+
+@dataclass
+class _FakeCoordinator:
+    data: _FakeSnapshot
+
+
+def test_has_initial_value_true_when_row_has_value() -> None:
+    battery = next(d for d in SENSOR_DESCRIPTIONS if d.key == "battery_volts")
+    coordinator = _FakeCoordinator(_FakeSnapshot(realtime={"battery_volts": 2.8}))
+
+    assert _has_initial_value(coordinator, battery) is True
+
+
+def test_has_initial_value_false_when_row_missing_key() -> None:
+    # Davis-derived combined_realtime row: no battery_volts column populated.
+    battery = next(d for d in SENSOR_DESCRIPTIONS if d.key == "battery_volts")
+    coordinator = _FakeCoordinator(_FakeSnapshot(realtime={"air_temperature_c": 18.4}))
+
+    assert _has_initial_value(coordinator, battery) is False
+
+
+def test_has_initial_value_false_when_row_is_none() -> None:
+    battery = next(d for d in SENSOR_DESCRIPTIONS if d.key == "battery_volts")
+    coordinator = _FakeCoordinator(_FakeSnapshot(realtime=None))
+
+    assert _has_initial_value(coordinator, battery) is False

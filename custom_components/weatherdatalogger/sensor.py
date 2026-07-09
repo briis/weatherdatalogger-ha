@@ -51,6 +51,14 @@ class WeatherDataLoggerSensorDescription(SensorEntityDescription):
 
     source: str = "realtime"  # "realtime" or "stats"
     value_fn: Callable[[dict[str, Any]], Any] | None = None
+    skip_if_none: bool = False
+    """Don't create this entity if it has no value on the first refresh.
+
+    For fields some station hardware never populates (e.g. battery_volts is
+    Tempest-only — Davis stations leave it NULL forever), adding the entity
+    anyway would just leave a permanently-unavailable sensor cluttering the
+    device.
+    """
 
 
 def _get(key: str) -> Callable[[dict[str, Any]], Any]:
@@ -344,6 +352,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("battery_volts"),
+        skip_if_none=True,
     ),
     # Daily/rolling stats (combined_realtime_stats)
     WeatherDataLoggerSensorDescription(
@@ -380,6 +389,19 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
 )
 
 
+def _has_initial_value(
+    coordinator: WeatherDataLoggerCoordinator, description: WeatherDataLoggerSensorDescription
+) -> bool:
+    row = (
+        coordinator.data.realtime
+        if description.source == "realtime"
+        else coordinator.data.realtime_stats
+    )
+    if row is None or description.value_fn is None:
+        return False
+    return description.value_fn(row) is not None
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
@@ -390,6 +412,7 @@ async def async_setup_entry(
     async_add_entities(
         WeatherDataLoggerSensor(coordinator, entry, description)
         for description in SENSOR_DESCRIPTIONS
+        if not description.skip_if_none or _has_initial_value(coordinator, description)
     )
 
 
