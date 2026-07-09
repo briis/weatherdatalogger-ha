@@ -2,7 +2,21 @@
 
 from datetime import UTC, datetime
 
-from custom_components.weatherdatalogger.weather import _apply_current_high_low, _row_to_forecast
+from custom_components.weatherdatalogger.weather import (
+    WeatherDataLoggerWeather,
+    _apply_current_high_low,
+    _row_to_forecast,
+)
+
+
+class _FakeConfigEntry:
+    entry_id = "test_entry"
+
+
+def test_attribution_credits_visual_crossing() -> None:
+    entity = WeatherDataLoggerWeather(coordinator=None, entry=_FakeConfigEntry())
+
+    assert entity.attribution == "Weather data provided by Visual Crossing"
 
 
 def test_row_to_forecast_hourly() -> None:

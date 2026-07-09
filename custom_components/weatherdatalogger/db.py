@@ -35,7 +35,7 @@ class WeatherDataLoggerClient:
     def __init__(self, config: WeatherDataLoggerConfig) -> None:
         self._config = config
 
-    def _connect(self) -> pymysql.connections.Connection:
+    def _connect(self) -> pymysql.connections.Connection[DictCursor]:
         return pymysql.connect(
             host=self._config.host,
             port=self._config.port,

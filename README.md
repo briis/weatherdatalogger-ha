@@ -15,7 +15,7 @@
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
 - **WeatherDataLogger Forecast** — a `weather` entity sourced from the Visual Crossing forecast tables (`forecast_current` / `forecast_hourly` / `forecast_daily`), with current conditions plus hourly and daily forecasts.
-- **WeatherDataLogger Station** — 36 `sensor` entities sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
+- **WeatherDataLogger Station** — 36 `sensor` entities plus 1 `binary_sensor` entity, sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
 
 This integration is **polling, not push-based**: it queries the database on an interval (default 60s, configurable from 15s to 5 minutes — see [Options](#options)) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
 
@@ -76,6 +76,7 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | CAQI (PM10) | ✓ | European Common Air Quality Index derived from PM10. |
 | **Device** | | |
 | Battery voltage | ✓ | The station's reporting battery voltage. Only created if the paired hardware reports it (Tempest does; Davis stations never populate this field, so the entity is skipped rather than added as permanently unavailable). |
+| Battery low *(`binary_sensor`, not `sensor`)* | ✓ | On when the station reports a low battery warning. |
 | **Daily/rolling stats** | | |
 | Wind gust high today | | Highest wind gust recorded since local midnight. |
 | Wind bearing average today | ✓ | Average wind direction since local midnight. |
@@ -154,6 +155,7 @@ custom_components/weatherdatalogger/
   db.py             Synchronous PyMySQL access (combined_realtime*, forecast_*)
   weather.py        `weather` entity (forecast device)
   sensor.py         `sensor` entities (station device)
+  binary_sensor.py  `binary_sensor` entities (station device)
   brand/            Icon and logo used in Home Assistant and HACS
   strings.json / translations/{en,da}.json   Config/options flow and entity translations
 sql/create_readonly_user.sql   Grants for a read-only HA DB user

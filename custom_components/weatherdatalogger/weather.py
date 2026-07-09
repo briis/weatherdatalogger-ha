@@ -88,6 +88,7 @@ class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], 
 
     _attr_has_entity_name = True
     _attr_name = None
+    _attr_attribution = "Weather data provided by Visual Crossing"
     _attr_native_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_native_pressure_unit = UnitOfPressure.HPA
     _attr_native_wind_speed_unit = UnitOfSpeed.METERS_PER_SECOND

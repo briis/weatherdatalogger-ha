@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.3] - UNRELEASED
 
+### Added
+
+- New *Battery low* `binary_sensor` entity, reading the `battery_low` field added to `combined_realtime`.
+- The weather entity now credits its data source via an `attribution` attribute: "Weather data provided by Visual Crossing".
+
 ### Changed
 
 - *Rain values* now has a default display precision of 1 decimal.

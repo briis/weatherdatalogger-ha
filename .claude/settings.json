@@ -60,7 +60,14 @@
       "Bash(git -C /workspaces/WeatherDatalogger-HA log --stat 869b5b4..HEAD)",
       "Bash(python -m pytest tests/test_sensor.py -q)",
       "Bash(python -c ' *)",
-      "Bash(python -m pytest -q)"
+      "Bash(python -m pytest -q)",
+      "Bash(python -c \"import json; json.load\\(open\\('custom_components/weatherdatalogger/strings.json'\\)\\); json.load\\(open\\('custom_components/weatherdatalogger/translations/en.json'\\)\\); json.load\\(open\\('custom_components/weatherdatalogger/translations/da.json'\\)\\); print\\('ok'\\)\")",
+      "Bash(python -c \"import pymysql, os; print\\(pymysql.__file__\\)\")",
+      "Bash(python -)",
+      "Bash(find / -iname \"*.pyi\" -path \"*pymysql*\")",
+      "Bash(find / -iname \"*PyMySQL*\" -path \"*stubs*\")",
+      "Bash(python -c \"import pyright\")",
+      "Bash(python -m pytest tests/test_weather.py -q)"
     ]
   }
 }

@@ -176,6 +176,11 @@
       "rain_total_yesterday": {
         "name": "Rain total yesterday"
       }
+    },
+    "binary_sensor": {
+      "battery_low": {
+        "name": "Battery low"
+      }
     }
   }
 }

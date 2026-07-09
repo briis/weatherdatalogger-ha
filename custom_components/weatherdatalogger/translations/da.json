@@ -176,6 +176,11 @@
       "rain_total_yesterday": {
         "name": "Regn i alt i går"
       }
+    },
+    "binary_sensor": {
+      "battery_low": {
+        "name": "Lavt batteriniveau"
+      }
     }
   }
 }

@@ -23,7 +23,7 @@ from .const import CONF_LOCATION, DEFAULT_SCAN_INTERVAL
 from .coordinator import WeatherDataLoggerCoordinator
 from .db import WeatherDataLoggerClient, WeatherDataLoggerConfig
 
-PLATFORMS = ["weather", "sensor"]
+PLATFORMS = ["weather", "sensor", "binary_sensor"]
 
 type WeatherDataLoggerConfigEntry = ConfigEntry[WeatherDataLoggerCoordinator]
 
