@@ -38,10 +38,10 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | **Temperature & humidity** | | |
 | Temperature | | Current outdoor air temperature. |
 | Humidity | | Current outdoor relative humidity. |
-| Dew point | ✓ | Temperature at which the air becomes saturated and dew starts to form. |
+| Dew point | | Temperature at which the air becomes saturated and dew starts to form. |
 | Feels like | | Apparent temperature, combining the heat index and wind chill as conditions warrant. |
-| Heat index | ✓ | Perceived temperature from the combined effect of heat and humidity. |
-| Wind chill | ✓ | Perceived temperature from the combined effect of wind and cold. |
+| Heat index | | Perceived temperature from the combined effect of heat and humidity. |
+| Wind chill | | Perceived temperature from the combined effect of wind and cold. |
 | Wet bulb | ✓ | Lowest temperature achievable by evaporative cooling at the current conditions. |
 | Indoor temperature | | Temperature reported by an indoor sensor (e.g. a console/hub). |
 | Indoor humidity | | Relative humidity reported by an indoor sensor. |
@@ -49,17 +49,17 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | Station pressure | ✓ | Raw barometric pressure at the station's altitude, uncorrected for elevation. |
 | Sea level pressure | | Barometric pressure adjusted to sea level, so it's comparable across locations. |
 | Pressure trend | | Rising / falling / steady trend derived from recent sea level pressure history. |
-| Pressure trend value | ✓ | Numeric hPa change over the trend window backing the pressure trend sensor. |
+| Pressure trend value | | Numeric hPa change over the trend window backing the pressure trend sensor. |
 | **Wind** | | |
 | Wind speed | | Average wind speed over the current sample interval. |
 | Wind gust | | Highest wind speed recorded during the current sample interval. |
-| Wind lull | ✓ | Lowest wind speed recorded during the current sample interval. |
+| Wind lull | | Lowest wind speed recorded during the current sample interval. |
 | Wind direction | | Wind direction, in degrees. |
-| Wind (Beaufort) | ✓ | Wind speed expressed on the Beaufort scale. |
+| Wind (Beaufort) | | Wind speed expressed on the Beaufort scale. |
 | **Solar & UV** | | |
 | Illuminance | | Ambient light level. |
 | UV index | | Current UV index. |
-| Solar radiation | ✓ | Solar irradiance reaching the station. |
+| Solar radiation | | Solar irradiance reaching the station. |
 | **Rain** | | |
 | Rain today | | Rainfall accumulated since local midnight. |
 | Rain rate | | Current rainfall intensity. |
@@ -79,7 +79,7 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | Battery low *(`binary_sensor`, not `sensor`)* | ✓ | On when the station reports a low battery warning. |
 | **Daily/rolling stats** | | |
 | Wind gust high today | | Highest wind gust recorded since local midnight. |
-| Wind bearing average today | ✓ | Average wind direction since local midnight. |
+| Wind bearing average today | | Average wind direction since local midnight. |
 | Rain total yesterday | | Total rainfall recorded yesterday. |
 
 > [!NOTE]
