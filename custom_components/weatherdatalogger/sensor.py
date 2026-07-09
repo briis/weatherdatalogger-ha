@@ -90,7 +90,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("dew_point_c"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -107,7 +106,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("heat_index_c"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -116,7 +114,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.TEMPERATURE,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("wind_chill_c"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -208,7 +205,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         suggested_unit_of_measurement=UnitOfSpeed.METERS_PER_SECOND,
         suggested_display_precision=1,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("wind_lull_ms"),
     ),
     WeatherDataLoggerSensorDescription(
@@ -223,7 +219,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         key="wind_beaufort",
         translation_key="wind_beaufort",
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:windsock",
         value_fn=_get("wind_beaufort"),
     ),
@@ -250,7 +245,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         device_class=SensorDeviceClass.IRRADIANCE,
         native_unit_of_measurement=UnitOfIrradiance.WATTS_PER_SQUARE_METER,
         state_class=SensorStateClass.MEASUREMENT,
-        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_get("solar_radiation_wm2"),
     ),
     # Rain
@@ -372,7 +366,6 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         native_unit_of_measurement=DEGREE,
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:compass-outline",
-        entity_category=EntityCategory.DIAGNOSTIC,
         source="stats",
         value_fn=_get("wind_bearing_avg_day"),
     ),
