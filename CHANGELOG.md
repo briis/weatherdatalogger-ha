@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - The weather entity's current temperature, pressure, humidity, wind speed/gust/bearing, and UV index now come from `combined_realtime` (the station's own live reading) instead of `forecast_current` (Visual Crossing's). Condition and visibility still come from `forecast_current`, which has no `combined_realtime` equivalent.
+- *Dew point*, *Heat index*, *Wind chill*, *Wind lull*, *Wind (Beaufort)*, *Solar radiation*, and *Wind bearing average today* are no longer marked as diagnostic entities.
 
 ## [0.2.3] - 2026-07-09
 
