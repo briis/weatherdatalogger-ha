@@ -15,7 +15,7 @@
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
 - **WeatherDataLogger Forecast** — a `weather` entity sourced from the Visual Crossing forecast tables (`forecast_current` / `forecast_hourly` / `forecast_daily`), with current conditions plus hourly and daily forecasts.
-- **WeatherDataLogger Station** — ~30 `sensor` entities sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
+- **WeatherDataLogger Station** — 36 `sensor` entities sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
 
 This integration is **polling, not push-based**: it queries the database on an interval (default 60s, configurable from 15s to 5 minutes — see [Options](#options)) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
 
@@ -31,19 +31,55 @@ A single `weather.*` entity exposing:
 
 ### Sensor entities — WeatherDataLogger Station
 
-| Category | Sensors |
-|---|---|
-| Temperature & humidity | Temperature, Humidity, Dew point, Feels like, Heat index, Wind chill, Wet bulb, Indoor temperature, Indoor humidity |
-| Pressure | Station pressure, Sea level pressure, Pressure trend |
-| Wind | Wind speed, Wind gust, Wind lull, Wind direction, Wind (Beaufort) |
-| Solar & UV | Illuminance, UV index, Solar radiation |
-| Rain | Rain today, Rain rate |
-| Lightning | Lightning strikes (3h), Lightning distance, Lightning last detected |
-| Air quality (AirLink) | PM2.5, PM10, AQI (PM2.5), AQI (PM10), CAQI (PM2.5), CAQI (PM10) |
-| Device | Battery voltage |
-| Daily/rolling stats | Wind gust high today, Wind bearing average today, Rain total yesterday |
+All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities marked **Diagnostic** are grouped separately in the entity list (rather than the main dashboard) since they're more useful for troubleshooting than everyday viewing.
 
-Several of these (dew point, heat index, wind chill, wet bulb, station pressure, pressure trend, wind lull, wind Beaufort, solar radiation, lightning\*, CAQI\*, battery voltage, wind bearing average today) are marked as **diagnostic** entities, so they're grouped separately in the entity list rather than cluttering the main dashboard.
+| Sensor | Diagnostic | Description |
+|---|---|---|
+| **Temperature & humidity** | | |
+| Temperature | | Current outdoor air temperature. |
+| Humidity | | Current outdoor relative humidity. |
+| Dew point | ✓ | Temperature at which the air becomes saturated and dew starts to form. |
+| Feels like | | Apparent temperature, combining the heat index and wind chill as conditions warrant. |
+| Heat index | ✓ | Perceived temperature from the combined effect of heat and humidity. |
+| Wind chill | ✓ | Perceived temperature from the combined effect of wind and cold. |
+| Wet bulb | ✓ | Lowest temperature achievable by evaporative cooling at the current conditions. |
+| Indoor temperature | | Temperature reported by an indoor sensor (e.g. a console/hub). |
+| Indoor humidity | | Relative humidity reported by an indoor sensor. |
+| **Pressure** | | |
+| Station pressure | ✓ | Raw barometric pressure at the station's altitude, uncorrected for elevation. |
+| Sea level pressure | | Barometric pressure adjusted to sea level, so it's comparable across locations. |
+| Pressure trend | | Rising / falling / steady trend derived from recent sea level pressure history. |
+| Pressure trend value | ✓ | Numeric hPa change over the trend window backing the pressure trend sensor. |
+| **Wind** | | |
+| Wind speed | | Average wind speed over the current sample interval. |
+| Wind gust | | Highest wind speed recorded during the current sample interval. |
+| Wind lull | ✓ | Lowest wind speed recorded during the current sample interval. |
+| Wind direction | | Wind direction, in degrees. |
+| Wind (Beaufort) | ✓ | Wind speed expressed on the Beaufort scale. |
+| **Solar & UV** | | |
+| Illuminance | | Ambient light level. |
+| UV index | | Current UV index. |
+| Solar radiation | ✓ | Solar irradiance reaching the station. |
+| **Rain** | | |
+| Rain today | | Rainfall accumulated since local midnight. |
+| Rain rate | | Current rainfall intensity. |
+| **Lightning** | | |
+| Lightning strikes (3h) | ✓ | Number of lightning strikes detected in the trailing 3 hours. |
+| Lightning distance | ✓ | Estimated distance to the nearest strike in the trailing 3 hours. |
+| Lightning last detected | ✓ | Timestamp of the last detected lightning strike. |
+| **Air quality (AirLink)** | | |
+| PM2.5 | | Fine particulate matter (≤2.5 µm) concentration. |
+| PM10 | | Coarse particulate matter (≤10 µm) concentration. |
+| AQI (PM2.5) | | US EPA Air Quality Index derived from PM2.5. |
+| AQI (PM10) | | US EPA Air Quality Index derived from PM10. |
+| CAQI (PM2.5) | ✓ | European Common Air Quality Index derived from PM2.5. |
+| CAQI (PM10) | ✓ | European Common Air Quality Index derived from PM10. |
+| **Device** | | |
+| Battery voltage | ✓ | The station's reporting battery voltage. |
+| **Daily/rolling stats** | | |
+| Wind gust high today | | Highest wind gust recorded since local midnight. |
+| Wind bearing average today | ✓ | Average wind direction since local midnight. |
+| Rain total yesterday | | Total rainfall recorded yesterday. |
 
 > [!NOTE]
 > Some sensors are unavailable until the underlying calculation has enough data behind it: the **lightning** sensors stay unset until WeatherDatalogger first detects a strike, and **pressure trend** / **pressure trend value** need up to 3 hours of history after WeatherDatalogger's first start before they report a value.
