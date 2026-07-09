@@ -1,8 +1,13 @@
-"""Weather platform for WeatherDataLogger — sourced from the Visual Crossing
-forecast tables (forecast_current/forecast_hourly/forecast_daily). The
-`weather_condition` columns already hold an HA-recognized condition string
+"""Weather platform for WeatherDataLogger. Current condition and visibility
+come from the Visual Crossing forecast tables (forecast_current) — the
+`weather_condition` column already holds an HA-recognized condition string
 (see db_writer.py / migrations/20260707_add_forecast_tables.sql), so no
-condition mapping is needed here.
+condition mapping is needed here. The other current-conditions values
+(temperature, pressure, humidity, wind, UV index) are read straight from
+combined_realtime instead, since that's the station's own live reading
+rather than Visual Crossing's periodically-fetched observation. Hourly and
+daily forecasts still come entirely from the forecast tables — combined_realtime
+has no forecast data.
 """
 
 from __future__ import annotations
@@ -84,7 +89,9 @@ def _apply_current_high_low(forecast: Forecast, current: dict | None) -> None:
 
 
 class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], WeatherEntity):
-    """Weather entity backed by the Visual Crossing forecast tables."""
+    """Weather entity backed by the Visual Crossing forecast tables, with
+    current conditions read from combined_realtime instead of forecast_current.
+    """
 
     _attr_has_entity_name = True
     _attr_name = None
@@ -112,32 +119,36 @@ class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], 
         return self.coordinator.data.forecast_current
 
     @property
+    def _realtime(self) -> dict | None:
+        return self.coordinator.data.realtime
+
+    @property
     def condition(self) -> str | None:
         return self._current["weather_condition"] if self._current else None
 
     @property
     def native_temperature(self) -> float | None:
-        return self._current["temperature_c"] if self._current else None
+        return self._realtime.get("air_temperature_c") if self._realtime else None
 
     @property
     def native_pressure(self) -> float | None:
-        return self._current["pressure_mb"] if self._current else None
+        return self._realtime.get("sea_level_pressure_mb") if self._realtime else None
 
     @property
     def humidity(self) -> float | None:
-        return self._current["humidity_pct"] if self._current else None
+        return self._realtime.get("relative_humidity_pct") if self._realtime else None
 
     @property
     def native_wind_speed(self) -> float | None:
-        return self._current["wind_speed_ms"] if self._current else None
+        return self._realtime.get("wind_avg_ms") if self._realtime else None
 
     @property
     def native_wind_gust_speed(self) -> float | None:
-        return self._current["wind_gust_ms"] if self._current else None
+        return self._realtime.get("wind_gust_ms") if self._realtime else None
 
     @property
     def wind_bearing(self) -> float | None:
-        return self._current["wind_bearing_deg"] if self._current else None
+        return self._realtime.get("wind_direction_deg") if self._realtime else None
 
     @property
     def native_visibility(self) -> float | None:
@@ -145,11 +156,11 @@ class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], 
 
     @property
     def uv_index(self) -> float | None:
-        return self._current["uv_index"] if self._current else None
+        return self._realtime.get("uv_index") if self._realtime else None
 
     @property
     def available(self) -> bool:
-        return super().available and self._current is not None
+        return super().available and self._current is not None and self._realtime is not None
 
     async def async_forecast_hourly(self) -> list[Forecast] | None:
         rows = self.coordinator.data.forecast_hourly

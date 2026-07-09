@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2026-07-09
+
+### Changed
+
+- The weather entity's current temperature, pressure, humidity, wind speed/gust/bearing, and UV index now come from `combined_realtime` (the station's own live reading) instead of `forecast_current` (Visual Crossing's). Condition and visibility still come from `forecast_current`, which has no `combined_realtime` equivalent.
+
 ## [0.2.3] - 2026-07-09
 
 ### Added
