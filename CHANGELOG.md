@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - *Lightning last detected* raised `ValueError: ... missing timezone information` and failed to add whenever a strike had actually been recorded, because MariaDB returns its `DATETIME` columns as naive datetimes and Home Assistant's `TIMESTAMP` device class requires timezone-aware ones. The value is now marked as UTC, matching how the forecast entity already handles `forecast_time`.
+- Bumped `pytest-homeassistant-custom-component` to 0.13.346 to match `homeassistant==2026.7.2` — the previous pairing (0.13.345 / 2026.7.1) made `pip install -r requirements_test.txt` fail with a dependency conflict once `homeassistant` was upgraded to 2026.7.2.
 
 ## [0.2.4] - 2026-07-09
 
