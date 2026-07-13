@@ -1,7 +1,10 @@
 """Tests for the sensor description table in sensor.py."""
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
+
+from homeassistant.util import dt as dt_util
 
 from custom_components.weatherdatalogger.sensor import SENSOR_DESCRIPTIONS, _has_initial_value
 
@@ -53,6 +56,7 @@ def test_only_battery_voltage_is_flagged_skip_if_none() -> None:
 class _FakeSnapshot:
     realtime: dict[str, Any] | None
     realtime_stats: dict[str, Any] | None = None
+    forecast_current: dict[str, Any] | None = None
 
 
 @dataclass
@@ -80,3 +84,41 @@ def test_has_initial_value_false_when_row_is_none() -> None:
     coordinator = _FakeCoordinator(_FakeSnapshot(realtime=None))
 
     assert _has_initial_value(coordinator, battery) is False
+
+
+def test_forecast_description_reads_from_forecast_current() -> None:
+    description = next(d for d in SENSOR_DESCRIPTIONS if d.key == "forecast_description")
+    assert description.source == "forecast"
+
+    coordinator = _FakeCoordinator(
+        _FakeSnapshot(realtime=None, forecast_current={"description": "Partly cloudy"})
+    )
+
+    assert _has_initial_value(coordinator, description) is True
+    assert description.value_fn(coordinator.data.forecast_current) == "Partly cloudy"
+
+
+def test_lightning_last_detected_attaches_utc_to_naive_datetime() -> None:
+    # PyMySQL returns naive datetimes for DATETIME columns, but HA's
+    # TIMESTAMP device class rejects a naive value outright — the DB stores
+    # these as UTC, so mark it explicitly rather than raising.
+    description = next(d for d in SENSOR_DESCRIPTIONS if d.key == "lightning_last_detected")
+    naive = datetime(2026, 7, 12, 16, 12, 18)
+
+    result = description.value_fn({"lightning_last_detected": naive})
+
+    assert result == naive.replace(tzinfo=dt_util.UTC)
+    assert result.tzinfo is not None
+
+
+def test_lightning_last_detected_leaves_aware_datetime_untouched() -> None:
+    description = next(d for d in SENSOR_DESCRIPTIONS if d.key == "lightning_last_detected")
+    aware = datetime(2026, 7, 12, 16, 12, 18, tzinfo=dt_util.UTC)
+
+    assert description.value_fn({"lightning_last_detected": aware}) == aware
+
+
+def test_lightning_last_detected_none_stays_none() -> None:
+    description = next(d for d in SENSOR_DESCRIPTIONS if d.key == "lightning_last_detected")
+
+    assert description.value_fn({}) is None

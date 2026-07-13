@@ -14,7 +14,7 @@
 
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
-- **WeatherDataLogger Forecast** — a `weather` entity with hourly and daily forecasts sourced from the Visual Crossing forecast tables (`forecast_hourly` / `forecast_daily`). Most current-condition values come from `combined_realtime` instead — the station's own live reading — with only condition and visibility taken from `forecast_current`, which don't have a `combined_realtime` equivalent.
+- **WeatherDataLogger Forecast** — a `weather` entity with hourly and daily forecasts sourced from the Visual Crossing forecast tables (`forecast_hourly` / `forecast_daily`). Most current-condition values come from `combined_realtime` instead — the station's own live reading — with only condition and visibility taken from `forecast_current`, which don't have a `combined_realtime` equivalent. A companion *Forecast description* sensor also reads `forecast_current`.
 - **WeatherDataLogger Station** — 36 `sensor` entities plus 1 `binary_sensor` entity, sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
 
 This integration is **polling, not push-based**: it queries the database on an interval (default 60s, configurable from 15s to 5 minutes — see [Options](#options)) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
@@ -28,6 +28,8 @@ A single `weather.*` entity exposing:
 - Current condition and visibility from `forecast_current`; temperature, pressure (sea level), humidity, wind speed/gust/bearing, and UV index from `combined_realtime`.
 - **Hourly forecast** (temperature, wind, pressure, humidity, UV index, precipitation probability/amount, cloud coverage).
 - **Daily forecast** (high/low temperature plus the same fields as hourly). Today's high/low is taken from `forecast_current`, which is refreshed every poll with the actual observed high/low so far — more accurate than the static prediction `forecast_daily` had at midnight.
+
+Alongside the `weather.*` entity, the same **WeatherDataLogger Forecast** device also has a *Forecast description* `sensor`, reading the `description` field from `forecast_current` — a short human-readable summary of the forecast (e.g. "Partly cloudy throughout the day").
 
 ### Sensor entities — WeatherDataLogger Station
 

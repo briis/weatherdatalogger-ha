@@ -175,6 +175,9 @@
       },
       "rain_total_yesterday": {
         "name": "Regn i alt i går"
+      },
+      "forecast_description": {
+        "name": "Vejrudsigt beskrivelse"
       }
     }
   }

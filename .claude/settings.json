@@ -67,7 +67,10 @@
       "Bash(find / -iname \"*.pyi\" -path \"*pymysql*\")",
       "Bash(find / -iname \"*PyMySQL*\" -path \"*stubs*\")",
       "Bash(python -c \"import pyright\")",
-      "Bash(python -m pytest tests/test_weather.py -q)"
+      "Bash(python -m pytest tests/test_weather.py -q)",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\('custom_components/weatherdatalogger/sensor.py'\\).read\\(\\)\\)\")",
+      "Bash(python3 -m pytest tests/test_sensor.py -q)",
+      "Bash(python3 -m pytest -q)"
     ]
   }
 }

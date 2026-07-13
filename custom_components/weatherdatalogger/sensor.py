@@ -4,6 +4,11 @@ weatherdatalogger/database/02_create_tables.sql upstream). Which physical
 station (Tempest/Davis/AirLink) actually supplies a given field is resolved
 by station_roles on the database side — this integration just reads
 whatever combined_realtime hands back.
+
+A second, smaller group of sensors (source="forecast") reads from
+forecast_current instead and is attached to the WeatherDataLogger Forecast
+device alongside the weather entity, since that's Visual Crossing's data
+rather than the station's own reading.
 """
 
 from __future__ import annotations
@@ -37,8 +42,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import dt as dt_util
 
-from .const import DOMAIN, MANUFACTURER, STATION_DEVICE_NAME
+from .const import DOMAIN, MANUFACTURER, STATION_DEVICE_NAME, WEATHER_DEVICE_NAME
 from .coordinator import WeatherDataLoggerCoordinator
 
 CONCENTRATION_MICROGRAMS_PER_CUBIC_METER = "µg/m³"
@@ -49,7 +55,7 @@ STRIKES = "strikes"
 class WeatherDataLoggerSensorDescription(SensorEntityDescription):
     """Adds which coordinator sub-result and dict key a sensor reads from."""
 
-    source: str = "realtime"  # "realtime" or "stats"
+    source: str = "realtime"  # "realtime", "stats", or "forecast"
     value_fn: Callable[[dict[str, Any]], Any] | None = None
     skip_if_none: bool = False
     """Don't create this entity if it has no value on the first refresh.
@@ -63,6 +69,23 @@ class WeatherDataLoggerSensorDescription(SensorEntityDescription):
 
 def _get(key: str) -> Callable[[dict[str, Any]], Any]:
     return lambda row: row.get(key)
+
+
+def _get_timestamp(key: str) -> Callable[[dict[str, Any]], Any]:
+    """Like _get, but marks a naive datetime as UTC.
+
+    The DB stores timestamp columns as naive UTC. HA's TIMESTAMP device
+    class requires timezone-aware datetimes, so a naive value raises
+    instead of just displaying wrong — attach UTC explicitly.
+    """
+
+    def _read(row: dict[str, Any]) -> Any:
+        value = row.get(key)
+        if value is not None and value.tzinfo is None:
+            value = value.replace(tzinfo=dt_util.UTC)
+        return value
+
+    return _read
 
 
 SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
@@ -290,7 +313,7 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         translation_key="lightning_last_detected",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_get("lightning_last_detected"),
+        value_fn=_get_timestamp("lightning_last_detected"),
     ),
     # Air quality (AirLink)
     WeatherDataLoggerSensorDescription(
@@ -379,17 +402,31 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         source="stats",
         value_fn=_get("rain_total_yesterday"),
     ),
+    # Forecast (forecast_current — Visual Crossing)
+    WeatherDataLoggerSensorDescription(
+        key="forecast_description",
+        translation_key="forecast_description",
+        icon="mdi:text-box-outline",
+        source="forecast",
+        value_fn=_get("description"),
+    ),
 )
+
+
+def _row_for_source(
+    coordinator: WeatherDataLoggerCoordinator, source: str
+) -> dict[str, Any] | None:
+    if source == "realtime":
+        return coordinator.data.realtime
+    if source == "stats":
+        return coordinator.data.realtime_stats
+    return coordinator.data.forecast_current
 
 
 def _has_initial_value(
     coordinator: WeatherDataLoggerCoordinator, description: WeatherDataLoggerSensorDescription
 ) -> bool:
-    row = (
-        coordinator.data.realtime
-        if description.source == "realtime"
-        else coordinator.data.realtime_stats
-    )
+    row = _row_for_source(coordinator, description.source)
     if row is None or description.value_fn is None:
         return False
     return description.value_fn(row) is not None
@@ -424,19 +461,24 @@ class WeatherDataLoggerSensor(CoordinatorEntity[WeatherDataLoggerCoordinator], S
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, f"{entry.entry_id}_station")},
-            name=STATION_DEVICE_NAME,
-            manufacturer=MANUFACTURER,
-            model="Merged station readings (combined_realtime)",
-        )
+        if description.source == "forecast":
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, f"{entry.entry_id}_weather")},
+                name=WEATHER_DEVICE_NAME,
+                manufacturer=MANUFACTURER,
+                model="Visual Crossing forecast",
+            )
+        else:
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, f"{entry.entry_id}_station")},
+                name=STATION_DEVICE_NAME,
+                manufacturer=MANUFACTURER,
+                model="Merged station readings (combined_realtime)",
+            )
 
     @property
     def _row(self) -> dict[str, Any] | None:
-        data = self.coordinator.data
-        return (
-            data.realtime if self.entity_description.source == "realtime" else data.realtime_stats
-        )
+        return _row_for_source(self.coordinator, self.entity_description.source)
 
     @property
     def native_value(self) -> Any:

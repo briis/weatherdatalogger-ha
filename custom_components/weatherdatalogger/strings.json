@@ -175,6 +175,9 @@
       },
       "rain_total_yesterday": {
         "name": "Rain total yesterday"
+      },
+      "forecast_description": {
+        "name": "Forecast description"
       }
     },
     "binary_sensor": {

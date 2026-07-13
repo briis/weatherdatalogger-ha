@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.5] - UNRELEASED
 
+### Added
+
+- New *Forecast description* `sensor` entity, reading the `description` field from `forecast_current`. It belongs to the **WeatherDataLogger Forecast** device, alongside the weather entity.
+
 ### Changed
 
 - Corrected the Danish translation for *Wind lull* to "Minimum vindhastighed".
+
+### Fixed
+
+- *Lightning last detected* raised `ValueError: ... missing timezone information` and failed to add whenever a strike had actually been recorded, because MariaDB returns its `DATETIME` columns as naive datetimes and Home Assistant's `TIMESTAMP` device class requires timezone-aware ones. The value is now marked as UTC, matching how the forecast entity already handles `forecast_time`.
 
 ## [0.2.4] - 2026-07-09
 
