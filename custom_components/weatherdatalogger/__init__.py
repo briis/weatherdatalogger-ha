@@ -19,7 +19,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_LOCATION, DEFAULT_SCAN_INTERVAL
+from .const import CONF_LOCATION, CONF_PROVIDER, DEFAULT_PROVIDER, DEFAULT_SCAN_INTERVAL
 from .coordinator import WeatherDataLoggerCoordinator
 from .db import WeatherDataLoggerClient, WeatherDataLoggerConfig
 
@@ -38,6 +38,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigE
             username=entry.data[CONF_USERNAME],
             password=entry.data[CONF_PASSWORD],
             location=entry.data[CONF_LOCATION],
+            provider=entry.data[CONF_PROVIDER],
         )
     )
 
@@ -60,6 +61,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigE
 async def async_unload_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry) -> bool:
     """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: WeatherDataLoggerConfigEntry) -> bool:
+    """Migrate an old config entry to the current version."""
+    if entry.version == 1:
+        new_data = {**entry.data, CONF_PROVIDER: DEFAULT_PROVIDER}
+        hass.config_entries.async_update_entry(entry, data=new_data, version=2)
+    return True
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:

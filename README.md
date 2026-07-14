@@ -91,14 +91,21 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 
 This integration is a read-only Home Assistant frontend for **[WeatherDatalogger](https://github.com/briis/WeatherDatalogger)** — a separate project that polls your weather station(s) and writes the merged readings and forecast data into a MariaDB database. WeatherDatalogger must already be installed, configured, and running before this add-on has anything to read; see its repository for setup instructions.
 
-Once WeatherDatalogger is running, create a read-only DB user so this integration never needs write access:
+Once WeatherDatalogger is running, create a read-only DB user so this integration never needs write access. The recommended way is WeatherDatalogger's own idempotent setup script, which prompts for the password interactively instead of requiring you to edit a placeholder by hand:
+
+```bash
+# On the weatherdatalogger production host:
+sudo bash /opt/weatherdatalogger/scripts/create_ha_readonly_user.sh
+```
+
+If you can't run a script on that host, or prefer to see/edit the SQL directly, the equivalent grants are also available as a fallback in this repo:
 
 ```bash
 # On the weatherdatalogger production host, edit the password first:
 mysql -u root weatherdatalogger < sql/create_readonly_user.sql
 ```
 
-This grants `SELECT` only on the `weatherdatalogger` database — no `INSERT`/`UPDATE`, unlike the writer user the logger services use.
+Either way, this grants `SELECT` only on the `weatherdatalogger` database — no `INSERT`/`UPDATE`, unlike the writer user the logger services use.
 
 ## Installation
 
@@ -121,9 +128,15 @@ Settings → Devices & Services → Add Integration → **WeatherDataLogger**, t
 | Database name | `weatherdatalogger` | |
 | Username | — | The read-only user created above |
 | Password | — | |
-| Forecast location | `home` | Must match the `[visualcrossing]` `location` setting in WeatherDatalogger |
 
-Connectivity and credentials are validated against `combined_realtime` before the entry is created. The config flow UI is available in **English and Danish** (`translations/en.json`, `translations/da.json`), following the browser/HA-instance language.
+Connectivity and credentials are validated against `combined_realtime` before moving on. Two more steps then ask you to pick:
+
+- **Forecast location** — a dropdown pre-populated with whichever location slugs already have forecast rows in the database (just `home` for most setups), defaulting to `home`.
+- **Forecast provider** — a dropdown scoped to that location, pre-populated with whichever provider slugs already have forecast rows there (just `visualcrossing` for most setups), defaulting to `visualcrossing`. Only relevant once more than one forecast provider is ever configured for the same location upstream.
+
+Both dropdowns also accept typed input, for a location or provider that hasn't written any forecast rows yet if you're setting one up ahead of time.
+
+The config flow UI is available in **English and Danish** (`translations/en.json`, `translations/da.json`), following the browser/HA-instance language.
 
 ### Reconfigure
 

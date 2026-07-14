@@ -22,7 +22,8 @@ class WeatherDataLoggerConfig:
     database: str
     username: str
     password: str
-    location: str
+    location: str = ""
+    provider: str = ""
 
 
 class WeatherDataLoggerClient:
@@ -52,6 +53,28 @@ class WeatherDataLoggerClient:
         with self._connect() as conn, conn.cursor() as cur:
             cur.execute("SELECT 1 FROM combined_realtime LIMIT 1")
 
+    def list_locations(self) -> list[str]:
+        """Return the distinct forecast locations configured in this database."""
+        query = (
+            "SELECT location FROM forecast_current"
+            " UNION SELECT location FROM forecast_hourly"
+            " UNION SELECT location FROM forecast_daily"
+        )
+        with self._connect() as conn, conn.cursor() as cur:
+            cur.execute(query)
+            return sorted(row["location"] for row in cur.fetchall())
+
+    def list_providers(self) -> list[str]:
+        """Return the distinct forecast providers configured for this location."""
+        query = (
+            "SELECT provider FROM forecast_current WHERE location = %s"
+            " UNION SELECT provider FROM forecast_hourly WHERE location = %s"
+            " UNION SELECT provider FROM forecast_daily WHERE location = %s"
+        )
+        with self._connect() as conn, conn.cursor() as cur:
+            cur.execute(query, (self._config.location,) * 3)
+            return sorted(row["provider"] for row in cur.fetchall())
+
     def fetch_all(self) -> WeatherDataLoggerSnapshot:
         """Fetch everything the two platforms need in one connection."""
         with self._connect() as conn, conn.cursor() as cur:
@@ -62,20 +85,22 @@ class WeatherDataLoggerClient:
             realtime_stats = cur.fetchone()
 
             cur.execute(
-                "SELECT * FROM forecast_current WHERE location = %s",
-                (self._config.location,),
+                "SELECT * FROM forecast_current WHERE provider = %s AND location = %s",
+                (self._config.provider, self._config.location),
             )
             forecast_current = cur.fetchone()
 
             cur.execute(
-                "SELECT * FROM forecast_hourly WHERE location = %s ORDER BY forecast_time ASC",
-                (self._config.location,),
+                "SELECT * FROM forecast_hourly WHERE provider = %s AND location = %s"
+                " ORDER BY forecast_time ASC",
+                (self._config.provider, self._config.location),
             )
             forecast_hourly = list(cur.fetchall())
 
             cur.execute(
-                "SELECT * FROM forecast_daily WHERE location = %s ORDER BY forecast_time ASC",
-                (self._config.location,),
+                "SELECT * FROM forecast_daily WHERE provider = %s AND location = %s"
+                " ORDER BY forecast_time ASC",
+                (self._config.provider, self._config.location),
             )
             forecast_daily = list(cur.fetchall())
 

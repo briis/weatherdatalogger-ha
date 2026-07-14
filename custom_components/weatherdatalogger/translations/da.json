@@ -9,16 +9,14 @@
           "port": "Port",
           "database": "Databasenavn",
           "username": "Brugernavn",
-          "password": "Adgangskode",
-          "location": "Vejrudsigtslokation"
+          "password": "Adgangskode"
         },
         "data_description": {
           "host": "Værtsnavn eller IP-adresse på MariaDB-serveren.",
           "port": "TCP-port som MariaDB-serveren lytter på.",
           "database": "Navnet på databasen, der indeholder weatherdatalogger-tabellerne.",
           "username": "Databasebruger, der bruges til at læse vejrdata. En skrivebeskyttet konto anbefales.",
-          "password": "Adgangskode til databasebrugeren.",
-          "location": "Skal matche [visualcrossing]-lokationsindstillingen i WeatherDatalogger — standard er \"home\"."
+          "password": "Adgangskode til databasebrugeren."
         }
       },
       "reconfigure": {
@@ -29,16 +27,34 @@
           "port": "Port",
           "database": "Databasenavn",
           "username": "Brugernavn",
-          "password": "Adgangskode",
-          "location": "Vejrudsigtslokation"
+          "password": "Adgangskode"
         },
         "data_description": {
           "host": "Værtsnavn eller IP-adresse på MariaDB-serveren.",
           "port": "TCP-port som MariaDB-serveren lytter på.",
           "database": "Navnet på databasen, der indeholder weatherdatalogger-tabellerne.",
           "username": "Databasebruger, der bruges til at læse vejrdata. En skrivebeskyttet konto anbefales.",
-          "password": "Adgangskode til databasebrugeren.",
-          "location": "Skal matche [visualcrossing]-lokationsindstillingen i WeatherDatalogger— standard er \"home\"."
+          "password": "Adgangskode til databasebrugeren."
+        }
+      },
+      "location": {
+        "title": "Vælg en vejrudsigtslokation",
+        "description": "Dette er de vejrudsigtslokationer, der aktuelt findes i WeatherDatalogger. Vælg en, eller indtast en lokation, der endnu ikke har skrevet vejrudsigtsdata.",
+        "data": {
+          "location": "Vejrudsigtslokation"
+        },
+        "data_description": {
+          "location": "Skal matche en [visualcrossing]-lokationsindstilling i WeatherDatalogger — standard er \"home\"."
+        }
+      },
+      "provider": {
+        "title": "Vælg en vejrudsigtsudbyder",
+        "description": "Dette er de vejrudsigtsudbydere, der aktuelt findes i WeatherDatalogger for denne lokation. Vælg en, eller indtast en udbyder-slug, der endnu ikke har skrevet vejrudsigtsdata.",
+        "data": {
+          "provider": "Vejrudsigtsudbyder"
+        },
+        "data_description": {
+          "provider": "Udbyder-slug fra WeatherDataloggers vejrudsigtstabeller — standard er \"visualcrossing\"."
         }
       }
     },

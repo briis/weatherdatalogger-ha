@@ -70,7 +70,10 @@
       "Bash(python -m pytest tests/test_weather.py -q)",
       "Bash(python3 -c \"import ast; ast.parse\\(open\\('custom_components/weatherdatalogger/sensor.py'\\).read\\(\\)\\)\")",
       "Bash(python3 -m pytest tests/test_sensor.py -q)",
-      "Bash(python3 -m pytest -q)"
+      "Bash(python3 -m pytest -q)",
+      "Bash(python3 -c \"import pytest_homeassistant_custom_component.common as c; print\\(c.__file__\\)\")",
+      "Bash(find / -iname \"common.py\" -path \"*pytest_homeassistant_custom_component*\")",
+      "Bash(python3 -c \"import json; json.load\\(open\\('custom_components/weatherdatalogger/strings.json'\\)\\)\")"
     ]
   }
 }

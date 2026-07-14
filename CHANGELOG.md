@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-07-14
+
+### Added
+
+- The config flow now discovers **forecast location** and **forecast provider** from the database instead of asking for free text: after the connection details are validated, a *Forecast location* dropdown shows the location slugs already found in `forecast_current`/`forecast_hourly`/`forecast_daily`, followed by a *Forecast provider* dropdown scoped to the chosen location. Both default sensibly (`home` / `visualcrossing`) and still accept a typed value for a location or provider that hasn't written any forecast rows yet. The *Forecast provider* step matches the `provider` column added to those same tables upstream in WeatherDatalogger — required now that they key on `(provider, location)` instead of `location` alone, since a second forecast provider configured for the same location would otherwise make `db.py`'s queries match more than one row.
+
+### Changed
+
+- Existing config entries (created before the provider field existed) are migrated automatically on first load after upgrading: a config-entry migration backfills `provider: "visualcrossing"` into the entry's persisted data and bumps it to config flow version 2. No user action is required.
+- README's *Prerequisites* section now leads with WeatherDatalogger's own `scripts/create_ha_readonly_user.sh` (idempotent, prompts for the password) for creating the read-only DB user, keeping the manual `sql/create_readonly_user.sql` route as a fallback.
+
 ## [0.2.5] - 2026-07-13
 
 ### Added

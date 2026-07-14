@@ -9,16 +9,14 @@
           "port": "Port",
           "database": "Database name",
           "username": "Username",
-          "password": "Password",
-          "location": "Forecast location"
+          "password": "Password"
         },
         "data_description": {
           "host": "Hostname or IP address of the MariaDB server.",
           "port": "TCP port the MariaDB server listens on.",
           "database": "Name of the database containing the weatherdatalogger tables.",
           "username": "Database user used to read the weather data. A read-only account is recommended.",
-          "password": "Password for the database user.",
-          "location": "Matches the [visualcrossing] location setting in WeatherDatalogger — defaults to \"home\"."
+          "password": "Password for the database user."
         }
       },
       "reconfigure": {
@@ -29,16 +27,34 @@
           "port": "Port",
           "database": "Database name",
           "username": "Username",
-          "password": "Password",
-          "location": "Forecast location"
+          "password": "Password"
         },
         "data_description": {
           "host": "Hostname or IP address of the MariaDB server.",
           "port": "TCP port the MariaDB server listens on.",
           "database": "Name of the database containing the weatherdatalogger tables.",
           "username": "Database user used to read the weather data. A read-only account is recommended.",
-          "password": "Password for the database user.",
-          "location": "Matches the [visualcrossing] location setting in WeatherDatalogger — defaults to \"home\"."
+          "password": "Password for the database user."
+        }
+      },
+      "location": {
+        "title": "Choose a forecast location",
+        "description": "These are the forecast locations currently found in WeatherDatalogger. Pick one, or type a location that hasn't written any forecast rows yet.",
+        "data": {
+          "location": "Forecast location"
+        },
+        "data_description": {
+          "location": "Matches a [visualcrossing] location setting in WeatherDatalogger — defaults to \"home\"."
+        }
+      },
+      "provider": {
+        "title": "Choose a forecast provider",
+        "description": "These are the forecast providers currently found in WeatherDatalogger for this location. Pick one, or type a provider slug that hasn't written any forecast rows yet.",
+        "data": {
+          "provider": "Forecast provider"
+        },
+        "data_description": {
+          "provider": "Provider slug from WeatherDatalogger's forecast tables — defaults to \"visualcrossing\"."
         }
       }
     },
