@@ -64,7 +64,7 @@
       "unknown": "Unexpected error."
     },
     "abort": {
-      "already_configured": "This database/location is already configured.",
+      "already_configured": "This database/location/provider is already configured.",
       "reconfigure_successful": "The connection settings were updated successfully."
     }
   },

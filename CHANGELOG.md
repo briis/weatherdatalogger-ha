@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - UNRELEASED
+
+### Fixed
+
+- Confirmed and locked in with regression tests that the config flow already rejects adding the same host/database/location/provider combination twice, aborting with `already_configured` instead of creating a duplicate entry. A second location or provider on the same host/database is still accepted as a legitimate, separate entry.
+
+### Changed
+
+- Reworded the `already_configured` abort message (`strings.json`, `translations/en.json`, `translations/da.json`) from "This database/location is already configured" to "This database/location/provider is already configured", since provider is now part of what makes an entry unique.
+
 ## [0.3.0] - 2026-07-14
 
 ### Added

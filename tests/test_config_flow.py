@@ -211,6 +211,61 @@ async def _setup_entry(hass: HomeAssistant) -> config_entries.ConfigEntry:
     return hass.config_entries.async_entries(DOMAIN)[0]
 
 
+async def test_user_flow_aborts_on_duplicate_host_location_provider(hass: HomeAssistant) -> None:
+    """Adding the same host/database/location/provider a second time is rejected."""
+    await _setup_entry(hass)
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    with (
+        patch(_CLIENT_TEST_CONNECTION),
+        patch(_CLIENT_LIST_LOCATIONS, return_value=["home"]),
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], CONNECTION_INPUT
+        )
+
+    with patch(_CLIENT_LIST_PROVIDERS, return_value=["visualcrossing"]):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], LOCATION_INPUT
+        )
+
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], PROVIDER_INPUT)
+
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+    assert len(hass.config_entries.async_entries(DOMAIN)) == 1
+
+
+async def test_user_flow_allows_same_host_with_different_location(hass: HomeAssistant) -> None:
+    """A second location on the same database/host is a legitimate, separate entry."""
+    await _setup_entry(hass)
+
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": config_entries.SOURCE_USER}
+    )
+    with (
+        patch(_CLIENT_TEST_CONNECTION),
+        patch(_CLIENT_LIST_LOCATIONS, return_value=["home", "cabin"]),
+    ):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], CONNECTION_INPUT
+        )
+
+    with patch(_CLIENT_LIST_PROVIDERS, return_value=["visualcrossing"]):
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"], {"location": "cabin"}
+        )
+
+    with patch("custom_components.weatherdatalogger.async_setup_entry", return_value=True):
+        result = await hass.config_entries.flow.async_configure(result["flow_id"], PROVIDER_INPUT)
+        await hass.async_block_till_done()
+
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert len(hass.config_entries.async_entries(DOMAIN)) == 2
+
+
 async def test_reconfigure_flow_prefills_current_values(hass: HomeAssistant) -> None:
     """The reconfigure form is pre-filled with the existing entry's connection details."""
     entry = await _setup_entry(hass)

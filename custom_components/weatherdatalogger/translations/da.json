@@ -64,7 +64,7 @@
       "unknown": "Uventet fejl."
     },
     "abort": {
-      "already_configured": "Denne database/lokation er allerede konfigureret.",
+      "already_configured": "Denne database/lokation/udbyder er allerede konfigureret.",
       "reconfigure_successful": "Forbindelsesindstillingerne blev opdateret."
     }
   },
