@@ -3,7 +3,7 @@
 # homeassistant== line below, or fixtures/test doubles drift out of sync
 # with the real integration environment. Bump both together; Dependabot
 # (.github/dependabot.yml) opens a PR whenever a new pair ships upstream.
-homeassistant==2026.7.2
+homeassistant==2026.7.3
 pytest-homeassistant-custom-component==0.13.346
 pytest-asyncio
 ruff
