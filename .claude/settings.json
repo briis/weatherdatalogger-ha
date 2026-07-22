@@ -80,7 +80,21 @@
       "Bash(/usr/local/python/3.14.6/bin/python3 -c ' *)",
       "Bash(find / -name \"languages.py\" -path \"*homeassistant*\")",
       "Bash(python3 -m pytest tests/test_sensor.py tests/test_binary_sensor.py -q)",
-      "Bash(python3 -c \"from homeassistant.util import slugify; print\\(slugify\\('Home'\\)\\); print\\(slugify\\('New York'\\)\\)\")"
+      "Bash(python3 -c \"from homeassistant.util import slugify; print\\(slugify\\('Home'\\)\\); print\\(slugify\\('New York'\\)\\)\")",
+      "Bash(python3 -m pytest tests/ -q)",
+      "Bash(find / -path \"*/homeassistant/components/weather/const.py\")",
+      "Bash(grep -n \"^ATTR_CONDITION\" /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/weather/const.py)",
+      "Read(//usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/weather/**)",
+      "Bash(grep -n \"CONDITION\" /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/weather/const.py | head -40)",
+      "Bash(grep -rn \"clear-night\\\\|CONDITION_CLASSES\\\\|VisualCrossing\\\\|ATTR_CONDITION\" /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/weather/*.py | head -60)",
+      "Read(//usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/sensor/**)",
+      "Bash(grep -n \"ENUM\\\\|device_class == SensorDeviceClass\" /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/sensor/__init__.py | head -20)",
+      "Bash(sed -n '680,715p' /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/sensor/__init__.py)",
+      "Bash(sed -n '600,682p' /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/sensor/__init__.py)",
+      "Bash(grep -n \"CONDITION_CLASSES\\\\|ATTR_CONDITION\" /usr/local/python/3.14.6/lib/python3.14/site-packages/homeassistant/components/weather/__init__.py | head -30)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }
