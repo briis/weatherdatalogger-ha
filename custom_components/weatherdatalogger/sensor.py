@@ -5,10 +5,14 @@ station (Tempest/Davis/AirLink) actually supplies a given field is resolved
 by station_roles on the database side — this integration just reads
 whatever combined_realtime hands back.
 
-A second, smaller group of sensors (source="forecast") reads from
-forecast_current instead and is attached to the WeatherDataLogger Forecast
-device alongside the weather entity, since that's Visual Crossing's data
-rather than the station's own reading.
+A second, smaller group of sensors reads Visual Crossing's forecast data
+instead and is attached to the WeatherDataLogger Forecast device alongside
+the weather entity: source="forecast" reads forecast_current (today's
+observation, refreshed every poll), while source="forecast_daily_today"
+reads the first (soonest) row of forecast_daily — precipitation probability
+and amount only exist on forecast_daily/forecast_hourly, not
+forecast_current, mirroring how the weather entity's own
+`forecast[0].precipitation`/`precipitation_probability` attributes work.
 """
 
 from __future__ import annotations
@@ -22,6 +26,23 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
+)
+from homeassistant.components.weather import (
+    ATTR_CONDITION_CLEAR_NIGHT,
+    ATTR_CONDITION_CLOUDY,
+    ATTR_CONDITION_EXCEPTIONAL,
+    ATTR_CONDITION_FOG,
+    ATTR_CONDITION_HAIL,
+    ATTR_CONDITION_LIGHTNING,
+    ATTR_CONDITION_LIGHTNING_RAINY,
+    ATTR_CONDITION_PARTLYCLOUDY,
+    ATTR_CONDITION_POURING,
+    ATTR_CONDITION_RAINY,
+    ATTR_CONDITION_SNOWY,
+    ATTR_CONDITION_SNOWY_RAINY,
+    ATTR_CONDITION_SUNNY,
+    ATTR_CONDITION_WINDY,
+    ATTR_CONDITION_WINDY_VARIANT,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -58,12 +79,37 @@ from .coordinator import WeatherDataLoggerCoordinator
 CONCENTRATION_MICROGRAMS_PER_CUBIC_METER = "µg/m³"
 STRIKES = "strikes"
 
+# The full set of condition strings HA's weather platform recognizes (see
+# homeassistant.components.weather) — forecast_current.weather_condition is
+# already one of these (see weather.py), so it can be used directly as the
+# `options` list for an enum sensor whose *state* is auto-translated by HA
+# rather than needing a translation table maintained here.
+WEATHER_CONDITIONS = (
+    ATTR_CONDITION_CLEAR_NIGHT,
+    ATTR_CONDITION_CLOUDY,
+    ATTR_CONDITION_EXCEPTIONAL,
+    ATTR_CONDITION_FOG,
+    ATTR_CONDITION_HAIL,
+    ATTR_CONDITION_LIGHTNING,
+    ATTR_CONDITION_LIGHTNING_RAINY,
+    ATTR_CONDITION_PARTLYCLOUDY,
+    ATTR_CONDITION_POURING,
+    ATTR_CONDITION_RAINY,
+    ATTR_CONDITION_SNOWY,
+    ATTR_CONDITION_SNOWY_RAINY,
+    ATTR_CONDITION_SUNNY,
+    ATTR_CONDITION_WINDY,
+    ATTR_CONDITION_WINDY_VARIANT,
+)
+
 
 @dataclass(frozen=True, kw_only=True)
 class WeatherDataLoggerSensorDescription(SensorEntityDescription):
     """Adds which coordinator sub-result and dict key a sensor reads from."""
 
-    source: str = "realtime"  # "realtime", "stats", or "forecast"
+    source: str = "realtime"
+    """"realtime", "stats", "forecast" (forecast_current), or
+    "forecast_daily_today" (forecast_daily[0])."""
     value_fn: Callable[[dict[str, Any]], Any] | None = None
     skip_if_none: bool = False
     """Don't create this entity if it has no value on the first refresh.
@@ -410,6 +456,35 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         source="stats",
         value_fn=_get("rain_total_yesterday"),
     ),
+    WeatherDataLoggerSensorDescription(
+        key="air_temp_high_today",
+        translation_key="air_temp_high_today",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        source="stats",
+        value_fn=_get("air_temp_high_today"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="air_temp_low_today",
+        translation_key="air_temp_low_today",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        source="stats",
+        value_fn=_get("air_temp_low_today"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="wind_speed_avg_10min",
+        translation_key="wind_speed_avg_10min",
+        device_class=SensorDeviceClass.WIND_SPEED,
+        native_unit_of_measurement=UnitOfSpeed.METERS_PER_SECOND,
+        suggested_unit_of_measurement=UnitOfSpeed.METERS_PER_SECOND,
+        suggested_display_precision=1,
+        state_class=SensorStateClass.MEASUREMENT,
+        source="stats",
+        value_fn=_get("wind_speed_avg_10min"),
+    ),
     # Forecast (forecast_current — Visual Crossing)
     WeatherDataLoggerSensorDescription(
         key="forecast_description",
@@ -417,6 +492,53 @@ SENSOR_DESCRIPTIONS: tuple[WeatherDataLoggerSensorDescription, ...] = (
         icon="mdi:text-box-outline",
         source="forecast",
         value_fn=_get("description"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="weather_condition",
+        translation_key="weather_condition",
+        device_class=SensorDeviceClass.ENUM,
+        options=list(WEATHER_CONDITIONS),
+        icon="mdi:weather-partly-cloudy",
+        source="forecast",
+        value_fn=_get("weather_condition"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="forecast_temperature_high_today",
+        translation_key="forecast_temperature_high_today",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        source="forecast",
+        value_fn=_get("temperature_high_c"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="forecast_temperature_low_today",
+        translation_key="forecast_temperature_low_today",
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        source="forecast",
+        value_fn=_get("temperature_low_c"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="forecast_precipitation_probability_today",
+        translation_key="forecast_precipitation_probability_today",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
+        icon="mdi:water-percent",
+        source="forecast_daily_today",
+        value_fn=_get("precipitation_probability_pct"),
+    ),
+    WeatherDataLoggerSensorDescription(
+        key="forecast_precipitation_today",
+        translation_key="forecast_precipitation_today",
+        device_class=SensorDeviceClass.PRECIPITATION,
+        native_unit_of_measurement=UnitOfPrecipitationDepth.MILLIMETERS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        source="forecast_daily_today",
+        value_fn=_get("precipitation_mm"),
     ),
 )
 
@@ -428,6 +550,9 @@ def _row_for_source(
         return coordinator.data.realtime
     if source == "stats":
         return coordinator.data.realtime_stats
+    if source == "forecast_daily_today":
+        rows = coordinator.data.forecast_daily
+        return rows[0] if rows else None
     return coordinator.data.forecast_current
 
 
@@ -480,7 +605,7 @@ class WeatherDataLoggerSensor(CoordinatorEntity[WeatherDataLoggerCoordinator], S
         # still comes from translation_key and stays language-dependent.
         location_slug = slugify(entry.data.get(CONF_LOCATION, DEFAULT_LOCATION))
         self.entity_id = f"sensor.wdl_{location_slug}_{description.key}"
-        if description.source == "forecast":
+        if description.source in ("forecast", "forecast_daily_today"):
             self._attr_device_info = DeviceInfo(
                 identifiers={(DOMAIN, f"{entry.entry_id}_weather")},
                 name=WEATHER_DEVICE_NAME,

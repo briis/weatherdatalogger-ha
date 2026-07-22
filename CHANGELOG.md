@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4] - 2026-07-22
+
+### Added
+
+- Six new `sensor` entities on the **WeatherDataLogger Forecast** device, alongside the existing *Forecast description* sensor: *Condition* (`weather_condition` — an enum sensor mirroring the `weather.*` entity's current condition, so its displayed state is translated into the frontend's language the same way the weather entity's is, rather than showing the raw English condition string) and *Forecast high/low today* (`forecast_temperature_high_today` / `forecast_temperature_low_today`) read `forecast_current`; *Precipitation probability today* (`forecast_precipitation_probability_today`) and *Precipitation forecast today* (`forecast_precipitation_today`) read today's `forecast_daily` row instead, since `precipitation_probability_pct`/`precipitation_mm` only exist on `forecast_daily`/`forecast_hourly`, not `forecast_current` — the same fields the `weather.*` entity's own `forecast[0].precipitation_probability`/`precipitation` attributes come from.
+
+## [0.3.3] - 2026-07-22
+
+### Added
+
+- Three new **WeatherDataLogger Station** sensors reading fields added to `combined_realtime_stats` upstream: *Temperature high today* / *Temperature low today* (`air_temp_high_today` / `air_temp_low_today` — max/min outdoor air temperature since local midnight) and *Wind speed average (10 min)* (`wind_speed_avg_10min` — a genuine trailing 10-minute mean, unlike `combined_realtime.wind_avg_ms`, which for Davis stations is the raw per-packet instantaneous reading despite its name).
+
 ## [0.3.2] - 2026-07-22
 
 ### Fixed

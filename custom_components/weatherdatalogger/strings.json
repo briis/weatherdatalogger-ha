@@ -192,8 +192,49 @@
       "rain_total_yesterday": {
         "name": "Rain total yesterday"
       },
+      "air_temp_high_today": {
+        "name": "Temperature high today"
+      },
+      "air_temp_low_today": {
+        "name": "Temperature low today"
+      },
+      "wind_speed_avg_10min": {
+        "name": "Wind speed average (10 min)"
+      },
       "forecast_description": {
         "name": "Forecast description"
+      },
+      "weather_condition": {
+        "name": "Condition",
+        "state": {
+          "clear-night": "Clear, night",
+          "cloudy": "Cloudy",
+          "exceptional": "Exceptional",
+          "fog": "Fog",
+          "hail": "Hail",
+          "lightning": "Lightning",
+          "lightning-rainy": "Lightning, rainy",
+          "partlycloudy": "Partly cloudy",
+          "pouring": "Pouring",
+          "rainy": "Rainy",
+          "snowy": "Snowy",
+          "snowy-rainy": "Snowy, rainy",
+          "sunny": "Sunny",
+          "windy": "Windy",
+          "windy-variant": "Windy, cloudy"
+        }
+      },
+      "forecast_temperature_high_today": {
+        "name": "Forecast high today"
+      },
+      "forecast_temperature_low_today": {
+        "name": "Forecast low today"
+      },
+      "forecast_precipitation_probability_today": {
+        "name": "Precipitation probability today"
+      },
+      "forecast_precipitation_today": {
+        "name": "Precipitation forecast today"
       }
     },
     "binary_sensor": {

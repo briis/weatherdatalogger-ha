@@ -14,8 +14,8 @@
 
 A Home Assistant custom integration for [WeatherDatalogger](https://github.com/briis/WeatherDatalogger) — it reads the `weatherdatalogger` MariaDB database directly, **read-only**, and turns it into two Home Assistant devices:
 
-- **WeatherDataLogger Forecast** — a `weather` entity with hourly and daily forecasts sourced from the Visual Crossing forecast tables (`forecast_hourly` / `forecast_daily`). Most current-condition values come from `combined_realtime` instead — the station's own live reading — with only condition and visibility taken from `forecast_current`, which don't have a `combined_realtime` equivalent. A companion *Forecast description* sensor also reads `forecast_current`.
-- **WeatherDataLogger Station** — 36 `sensor` entities plus 1 `binary_sensor` entity, sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
+- **WeatherDataLogger Forecast** — a `weather` entity with hourly and daily forecasts sourced from the Visual Crossing forecast tables (`forecast_hourly` / `forecast_daily`). Most current-condition values come from `combined_realtime` instead — the station's own live reading — with only condition and visibility taken from `forecast_current`, which don't have a `combined_realtime` equivalent. Six companion `sensor` entities also read the forecast tables (mostly `forecast_current`, with precipitation probability/amount taken from today's `forecast_daily` row instead, since `forecast_current` doesn't carry those two fields), covering the day's condition and forecast high/low/precipitation.
+- **WeatherDataLogger Station** — 39 `sensor` entities plus 1 `binary_sensor` entity, sourced from `combined_realtime` / `combined_realtime_stats`: the latest merged reading regardless of which physical station (Tempest/Davis/AirLink) `station_roles` currently assigns each measurement to.
 
 This integration is **polling, not push-based**: it queries the database on an interval (default 60s, configurable from 15s to 5 minutes — see [Options](#options)) rather than subscribing to MQTT directly, so it stays decoupled from whichever dataloggers happen to be running upstream.
 
@@ -29,11 +29,20 @@ A single `weather.*` entity exposing:
 - **Hourly forecast** (temperature, wind, pressure, humidity, UV index, precipitation probability/amount, cloud coverage).
 - **Daily forecast** (high/low temperature plus the same fields as hourly). Today's high/low is taken from `forecast_current`, which is refreshed every poll with the actual observed high/low so far — more accurate than the static prediction `forecast_daily` had at midnight.
 
-Alongside the `weather.*` entity, the same **WeatherDataLogger Forecast** device also has a *Forecast description* `sensor`, reading the `description` field from `forecast_current` — a short human-readable summary of the forecast (e.g. "Partly cloudy throughout the day").
+Alongside the `weather.*` entity, the same **WeatherDataLogger Forecast** device also has six `sensor` entities reading Visual Crossing's forecast data:
+
+| Sensor | Source | Description |
+|---|---|---|
+| Forecast description | `forecast_current` | Short human-readable summary of the forecast (e.g. "Partly cloudy throughout the day"). |
+| Condition | `forecast_current` | Today's weather condition (e.g. cloudy, rainy), translated into the frontend's language the same way the `weather.*` entity's state is. |
+| Forecast high today | `forecast_current` | Forecast high temperature for the current day. |
+| Forecast low today | `forecast_current` | Forecast low temperature for the current day. |
+| Precipitation probability today | `forecast_daily` (today's row) | Chance of precipitation for the current day — same value as the weather entity's `forecast[0].precipitation_probability`. |
+| Precipitation forecast today | `forecast_daily` (today's row) | Forecast precipitation amount for the current day — same value as the weather entity's `forecast[0].precipitation`. |
 
 ### Sensor entities — WeatherDataLogger Station
 
-All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities marked **Diagnostic** are grouped separately in the entity list (rather than the main dashboard) since they're more useful for troubleshooting than everyday viewing.
+All 39 sensors belong to a single **WeatherDataLogger Station** device. Entities marked **Diagnostic** are grouped separately in the entity list (rather than the main dashboard) since they're more useful for troubleshooting than everyday viewing.
 
 | Sensor | Diagnostic | Description |
 |---|---|---|
@@ -83,6 +92,9 @@ All 36 sensors belong to a single **WeatherDataLogger Station** device. Entities
 | Wind gust high today | | Highest wind gust recorded since local midnight. |
 | Wind bearing average today | | Average wind direction since local midnight. |
 | Rain total yesterday | | Total rainfall recorded yesterday. |
+| Temperature high today | | Highest outdoor air temperature recorded since local midnight. |
+| Temperature low today | | Lowest outdoor air temperature recorded since local midnight. |
+| Wind speed average (10 min) | | Trailing 10-minute mean wind speed. |
 
 > [!NOTE]
 > Some sensors are unavailable until the underlying calculation has enough data behind it: the **lightning** sensors stay unset until WeatherDatalogger first detects a strike, and **pressure trend** / **pressure trend value** need up to 3 hours of history after WeatherDatalogger's first start before they report a value.

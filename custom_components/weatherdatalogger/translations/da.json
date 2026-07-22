@@ -192,8 +192,49 @@
       "rain_total_yesterday": {
         "name": "Regn i alt i går"
       },
+      "air_temp_high_today": {
+        "name": "Højeste temperatur i dag"
+      },
+      "air_temp_low_today": {
+        "name": "Laveste temperatur i dag"
+      },
+      "wind_speed_avg_10min": {
+        "name": "Gennemsnitlig vindhastighed (10 min)"
+      },
       "forecast_description": {
         "name": "Vejrudsigt beskrivelse"
+      },
+      "weather_condition": {
+        "name": "Vejrforhold",
+        "state": {
+          "clear-night": "Klart, nat",
+          "cloudy": "Overskyet",
+          "exceptional": "Enestående",
+          "fog": "Tåge",
+          "hail": "Hagl",
+          "lightning": "Lyn",
+          "lightning-rainy": "Lyn, regnvejr",
+          "partlycloudy": "Delvist overskyet",
+          "pouring": "Kraftig regn",
+          "rainy": "Regnfuldt",
+          "snowy": "Sne",
+          "snowy-rainy": "Sne, regn",
+          "sunny": "Solrigt",
+          "windy": "Blæsende",
+          "windy-variant": "Blæsende, overskyet"
+        }
+      },
+      "forecast_temperature_high_today": {
+        "name": "Vejrudsigt højeste temperatur i dag"
+      },
+      "forecast_temperature_low_today": {
+        "name": "Vejrudsigt laveste temperatur i dag"
+      },
+      "forecast_precipitation_probability_today": {
+        "name": "Sandsynlighed for nedbør i dag"
+      },
+      "forecast_precipitation_today": {
+        "name": "Forventet nedbør i dag"
       }
     }
   }
