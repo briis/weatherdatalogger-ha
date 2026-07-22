@@ -13,6 +13,7 @@ from custom_components.weatherdatalogger.weather import (
 
 class _FakeConfigEntry:
     entry_id = "test_entry"
+    data = {"location": "home"}
 
 
 @dataclass

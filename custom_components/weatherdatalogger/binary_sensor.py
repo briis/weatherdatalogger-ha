@@ -20,8 +20,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.util import slugify
 
-from .const import DOMAIN, MANUFACTURER, STATION_DEVICE_NAME
+from .const import CONF_LOCATION, DEFAULT_LOCATION, DOMAIN, MANUFACTURER, STATION_DEVICE_NAME
 from .coordinator import WeatherDataLoggerCoordinator
 
 
@@ -74,9 +75,11 @@ class WeatherDataLoggerBinarySensor(
         self.entity_description = description
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
         # See the matching comment in sensor.py: suggest an English
-        # object_id explicitly so a Danish-language HA instance doesn't
-        # slugify the translated name into the entity_id.
-        self.entity_id = f"binary_sensor.{description.key}"
+        # object_id explicitly, prefixed with wdl_<location>, so a
+        # Danish-language HA instance doesn't slugify the translated name
+        # into the entity_id.
+        location_slug = slugify(entry.data.get(CONF_LOCATION, DEFAULT_LOCATION))
+        self.entity_id = f"binary_sensor.wdl_{location_slug}_{description.key}"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry.entry_id}_station")},
             name=STATION_DEVICE_NAME,

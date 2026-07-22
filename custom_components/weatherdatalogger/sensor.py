@@ -42,9 +42,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.util import dt as dt_util
+from homeassistant.util import dt as dt_util, slugify
 
-from .const import DOMAIN, MANUFACTURER, STATION_DEVICE_NAME, WEATHER_DEVICE_NAME
+from .const import (
+    CONF_LOCATION,
+    DEFAULT_LOCATION,
+    DOMAIN,
+    MANUFACTURER,
+    STATION_DEVICE_NAME,
+    WEATHER_DEVICE_NAME,
+)
 from .coordinator import WeatherDataLoggerCoordinator
 
 CONCENTRATION_MICROGRAMS_PER_CUBIC_METER = "µg/m³"
@@ -461,15 +468,17 @@ class WeatherDataLoggerSensor(CoordinatorEntity[WeatherDataLoggerCoordinator], S
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
-        # Suggest an English object_id explicitly. Danish is one of the
+        # Suggest an English object_id explicitly, prefixed with wdl_<location>
+        # so multiple stations/locations don't collide. Danish is one of the
         # languages HA treats as "native" for auto-generated entity_ids
         # (see homeassistant.generated.languages.NATIVE_ENTITY_IDS), so
-        # without this a Danish-language HA instance would slugify the
-        # translated (Danish) name into the entity_id instead of falling
-        # back to English like most other languages do. This only affects
-        # entity_id at first creation — the displayed friendly_name still
-        # comes from translation_key and stays language-dependent.
-        self.entity_id = f"sensor.{description.key}"
+        # without an explicit entity_id a Danish-language HA instance would
+        # slugify the translated (Danish) name into the entity_id instead of
+        # falling back to English like most other languages do. This only
+        # affects entity_id at first creation — the displayed friendly_name
+        # still comes from translation_key and stays language-dependent.
+        location_slug = slugify(entry.data.get(CONF_LOCATION, DEFAULT_LOCATION))
+        self.entity_id = f"sensor.wdl_{location_slug}_{description.key}"
         if description.source == "forecast":
             self._attr_device_info = DeviceInfo(
                 identifiers={(DOMAIN, f"{entry.entry_id}_weather")},

@@ -30,9 +30,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.util import dt as dt_util
+from homeassistant.util import dt as dt_util, slugify
 
-from .const import DOMAIN, MANUFACTURER, WEATHER_DEVICE_NAME
+from .const import CONF_LOCATION, DEFAULT_LOCATION, DOMAIN, MANUFACTURER, WEATHER_DEVICE_NAME
 from .coordinator import WeatherDataLoggerCoordinator
 
 
@@ -107,6 +107,12 @@ class WeatherDataLoggerWeather(CoordinatorEntity[WeatherDataLoggerCoordinator], 
     def __init__(self, coordinator: WeatherDataLoggerCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry.entry_id}_weather"
+        # Suggest an English, location-scoped entity_id (see the matching
+        # comment in sensor.py) so a second location/station configured on
+        # the same HA instance gets its own weather.wdl_<location>_weather
+        # entity instead of colliding on plain weather.weatherdatalogger_forecast.
+        location_slug = slugify(entry.data.get(CONF_LOCATION, DEFAULT_LOCATION))
+        self.entity_id = f"weather.wdl_{location_slug}_weather"
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{entry.entry_id}_weather")},
             name=WEATHER_DEVICE_NAME,
