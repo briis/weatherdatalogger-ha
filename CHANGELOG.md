@@ -5,11 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.3.1] - UNRELEASED
+## [0.3.1] - 2026-07-26
 
 ### Fixed
 
 - Confirmed and locked in with regression tests that the config flow already rejects adding the same host/database/location/provider combination twice, aborting with `already_configured` instead of creating a duplicate entry. A second location or provider on the same host/database is still accepted as a legitimate, separate entry.
+- Sensor and binary sensor entity IDs were generated from the Danish-translated name on Danish-language Home Assistant instances instead of English, because Home Assistant treats Danish as a "native" language for entity ID generation rather than falling back to English like most other locales. `sensor.py` and `binary_sensor.py` now explicitly suggest an English `entity_id` (from each entity's existing English `key`) when an entity is first created; the displayed `friendly_name` is unaffected and still follows the user's language via `translation_key`. Already-provisioned entities keep their existing entity_id and are not renamed.
 
 ### Changed
 

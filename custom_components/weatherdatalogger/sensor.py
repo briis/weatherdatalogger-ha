@@ -461,6 +461,15 @@ class WeatherDataLoggerSensor(CoordinatorEntity[WeatherDataLoggerCoordinator], S
         super().__init__(coordinator)
         self.entity_description = description
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
+        # Suggest an English object_id explicitly. Danish is one of the
+        # languages HA treats as "native" for auto-generated entity_ids
+        # (see homeassistant.generated.languages.NATIVE_ENTITY_IDS), so
+        # without this a Danish-language HA instance would slugify the
+        # translated (Danish) name into the entity_id instead of falling
+        # back to English like most other languages do. This only affects
+        # entity_id at first creation — the displayed friendly_name still
+        # comes from translation_key and stays language-dependent.
+        self.entity_id = f"sensor.{description.key}"
         if description.source == "forecast":
             self._attr_device_info = DeviceInfo(
                 identifiers={(DOMAIN, f"{entry.entry_id}_weather")},
