@@ -30,7 +30,8 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.util import dt as dt_util, slugify
+from homeassistant.util import dt as dt_util
+from homeassistant.util import slugify
 
 from .const import CONF_LOCATION, DEFAULT_LOCATION, DOMAIN, MANUFACTURER, WEATHER_DEVICE_NAME
 from .coordinator import WeatherDataLoggerCoordinator

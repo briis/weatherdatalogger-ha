@@ -222,14 +222,10 @@ async def test_user_flow_aborts_on_duplicate_host_location_provider(hass: HomeAs
         patch(_CLIENT_TEST_CONNECTION),
         patch(_CLIENT_LIST_LOCATIONS, return_value=["home"]),
     ):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"], CONNECTION_INPUT
-        )
+        result = await hass.config_entries.flow.async_configure(result["flow_id"], CONNECTION_INPUT)
 
     with patch(_CLIENT_LIST_PROVIDERS, return_value=["visualcrossing"]):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"], LOCATION_INPUT
-        )
+        result = await hass.config_entries.flow.async_configure(result["flow_id"], LOCATION_INPUT)
 
     result = await hass.config_entries.flow.async_configure(result["flow_id"], PROVIDER_INPUT)
 
@@ -249,9 +245,7 @@ async def test_user_flow_allows_same_host_with_different_location(hass: HomeAssi
         patch(_CLIENT_TEST_CONNECTION),
         patch(_CLIENT_LIST_LOCATIONS, return_value=["home", "cabin"]),
     ):
-        result = await hass.config_entries.flow.async_configure(
-            result["flow_id"], CONNECTION_INPUT
-        )
+        result = await hass.config_entries.flow.async_configure(result["flow_id"], CONNECTION_INPUT)
 
     with patch(_CLIENT_LIST_PROVIDERS, return_value=["visualcrossing"]):
         result = await hass.config_entries.flow.async_configure(
