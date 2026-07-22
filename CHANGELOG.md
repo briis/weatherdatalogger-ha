@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - The weather entity's `entity_id` is now also prefixed with `wdl_<location>_` (e.g. `weather.wdl_home_weather`), matching the 0.3.1 fix for sensor/binary sensor entity IDs. Without it, a second location/station configured on the same Home Assistant instance would have its weather entity collide with (and get suffixed after) the first one instead of getting its own stable, location-scoped ID.
+- Sensor and binary sensor entity IDs were generated from the Danish-translated name on Danish-language Home Assistant instances instead of English, because Home Assistant treats Danish as a "native" language for entity ID generation rather than falling back to English like most other locales. `sensor.py` and `binary_sensor.py` now explicitly suggest an English `entity_id`, prefixed with `wdl_<location>_` (e.g. `sensor.wdl_home_air_temperature_c`, using the *Forecast location* chosen in the config flow), when an entity is first created; the displayed `friendly_name` is unaffected and still follows the user's language via `translation_key`. Already-provisioned entities keep their existing entity_id and are not renamed.
 
 ## [0.3.1] - 2026-07-26
 
